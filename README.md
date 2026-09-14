@@ -81,6 +81,87 @@ For Cursor, Copilot and Codex, add `--with-rules` to include workflow guidance. 
 
 Direction boards are design studies. The number of compatible directions depends on the project context. Contract updates use revision checks to prevent one client from silently overwriting another client's decisions.
 
+## Use it in IDE chat
+
+After installation, reload your IDE and enable the Art Director MCP server in its tools/settings panel. Open a chat mode that can call tools. Paste a prompt below; these are natural-language requests, not slash commands. Your agent selects and calls the MCP tools.
+
+### Explore a design direction
+
+> Use Art Director MCP to inspect this project. I am building a portfolio for an independent designer; the primary task is finding and reading project case studies. Preserve the existing routes and real content. Turn this request into a structured brief, propose compatible visual directions, and explain how their layouts differ. Show the direction boards before changing application code.
+
+### Implement the selected direction
+
+> Use the second direction you just proposed. Compile it into a design contract using the current revision, retrieve a navigation blueprint, and implement the design in this project's existing stack. Preserve real content and behavior. Do not invent testimonials or usage metrics.
+
+### Audit and refine
+
+> The application is running at http://127.0.0.1:5187. Use Art Director MCP to audit it against the contract we created. Summarize the desktop and mobile findings, distinguish measured issues from visual judgment, and fix the highest-priority issues. Run the audit again after the changes.
+
+For this example, install the browser worker and add the application's exact origin to the server's startup arguments first; see [Browser audit](#browser-audit). Supplying a URL in chat does not grant network permission.
+
+### Focus on one component
+
+> Retrieve the form blueprint for our current contract. Use it to improve labels, focus behavior, loading, error and success states in this form. Explain which parts you verified and which need visual review.
+
+If a result is truncated, ask the agent to retrieve its `artifactId` with `get_artifact`, following `nextCursor`. Pass the generated direction object to contract compilation without its `previewArtifactId`. Use `expectedRevision: 0` for the first saved contract and the current revision for updates. Blueprint and audit calls use the `contractId` artifact identifier returned by compilation.
+
+## Command reference
+
+Run terminal commands from the project where the package is installed. Prefix each command with `npx art-director`.
+
+| Command | What it does |
+|---|---|
+| `--help` | Show CLI usage, assistant options and command names |
+| `clients` | List project adapters, aliases and skipped-client reasons |
+| `init --client cursor --local` | Preview project configuration changes without writing |
+| `init --client cursor --apply --local` | Install the selected adapter with backups |
+| `init --client all --apply --local` | Install every supported project adapter after preflight checks |
+| `doctor` | Print package/Node versions, platform, project root, worker availability and allowed origins |
+| `serve --project <absolute-root>` | Start the stdio MCP server used by the IDE |
+| `inspect` | Inspect the current project's UI inventory |
+| `directions --brief brief.json` | Generate directions from a structured JSON brief |
+| `contract --direction direction.json --expected-revision 0` | Compile and save a contract from a generated direction JSON file |
+| `audit --contract-id <id> --url http://127.0.0.1:5187 --allow-origin http://127.0.0.1:5187` | Audit a running local page against a saved contract |
+| `browser install` | Download the pinned browser binaries using the installed optional worker |
+| `pack validate design-pack.json` | Validate a design pack JSON file against the pack schema |
+
+Running `npx art-director` without a command displays `doctor` output. `get_blueprint` and `get_artifact` are MCP tools, not standalone CLI subcommands.
+
+### CLI options
+
+| Option | Applies to | Meaning |
+|---|---|---|
+| `--project <absolute-root>` | Project commands | Select the project; defaults to the current directory |
+| `--client <name>` | `init` | Choose an assistant, `vscode` alias or `all` |
+| `--apply` | `init` | Write the planned changes; otherwise preview only |
+| `--local` | `init` | Use the installed Node executable and package path |
+| `--with-rules` | `init` | Add managed workflow guidance for supported rule adapters |
+| `--brief <file>` | `directions` | Project-relative brief JSON path; default `brief.json` |
+| `--direction <file>` | `contract` | Project-relative generated direction JSON path; default `direction.json` |
+| `--expected-revision <integer>` | `contract` | Expected current saved revision; default `0` |
+| `--contract-id <id>` | `audit` | Contract artifact ID returned by compilation |
+| `--url <url>` | `audit` | Running application's page URL |
+| `--allow-origin <origin>` | `serve`, `audit` | Allow an exact numeric-loopback origin; repeat for multiple origins |
+| `--help` | CLI | Show help instead of executing a command |
+
+Brief, direction and pack file paths are relative to the selected project. They cannot read outside that root. A minimal brief file looks like this:
+
+```json
+{
+  "product": "Designer portfolio",
+  "primaryTask": "Find and read project case studies",
+  "pageType": "portfolio",
+  "audience": "Potential clients",
+  "content": [
+    { "heading": "Selected work", "body": "Replace this with your actual project description." }
+  ],
+  "constraints": ["Preserve existing routes"]
+}
+```
+
+`pageType` accepts `portfolio`, `product` or `dashboard`. Keep real project content in the brief. CLI results are JSON; use the returned artifacts through the IDE's MCP tools when a result is paginated.
+
+
 ## Browser audit
 
 Install the matching optional worker in the same project:

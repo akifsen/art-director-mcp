@@ -2,7 +2,7 @@
 
 ## 0.2.0 - 2026-09-14
 
-Independent review release of `@akifsen/art-director-mcp`. All changes are backward compatible; `@akifsen/art-director-browser` stays at 0.1.0 (IPC protocol unchanged). See `docs/reviews/2026-09-14-independent-review.md`.
+All changes are backward compatible; `@akifsen/art-director-browser` stays at 0.1.0 (IPC protocol unchanged).
 
 Added
 - Direction boards now follow each recipe's navigation pattern (top bar, side rail, inline masthead links with a native mobile disclosure), type system (serif/sans/condensed heading, body family, weight, numerals) and density; compositions render their own structure (toolbar + table skeleton, grouped records, split stage, numbered steps, margin index, alternating folio rows). Previously all six boards shared one typeface and rhythm and differed mainly by color.

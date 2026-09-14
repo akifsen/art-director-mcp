@@ -68,7 +68,7 @@ npx art-director clients
 
 Setup preserves unrelated settings and comments, creates backups, and keeps configuration inside the project. Repeated installation is idempotent. `vscode` is also accepted as an alias for `copilot`.
 
-For Cursor, Copilot and Codex, add `--with-rules` to include workflow guidance. See the [compatibility reference](docs/clients.md) for configuration paths and client-specific behavior. Adapter tests verify configuration generation and merging; individual IDE sessions are a separate compatibility check.
+For Cursor, Copilot and Codex, add `--with-rules` to include workflow guidance. See the [installation reference](docs/clients.md) for configuration paths, client-specific behavior and assistants that are configured through their own settings instead of a project file.
 
 ## Workflow
 
@@ -123,7 +123,7 @@ Run terminal commands from the project where the package is installed. Prefix ea
 |---|---|
 | `--help` | Show CLI usage, assistant options and command names |
 | `--version` | Print the package version |
-| `clients` | List project adapters, aliases and skipped-client reasons |
+| `clients` | List project adapters, aliases and assistants configured outside the project |
 | `init --client cursor --local` | Preview project configuration changes without writing |
 | `init --client cursor --apply --local` | Install the selected adapter with backups |
 | `init --client all --apply --local` | Install every supported project adapter after preflight checks |

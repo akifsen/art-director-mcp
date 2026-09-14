@@ -1,6 +1,6 @@
-# Assistant installation compatibility
+# Assistant installation reference
 
-Verified against official documentation on 2026-09-14. These are **config adapters tested by local fixtures**, not claims that real sessions in every IDE were exercised. All generated commands run on the user's computer and bind the supplied project root. No runtime GitHub API or Actions call is made.
+`art-director init` writes a project-scoped MCP server entry for the selected assistant. Every generated command runs on your computer and binds the supplied project root; nothing is written to home-directory settings.
 
 ```sh
 art-director clients
@@ -8,9 +8,9 @@ art-director init --client claude --apply
 art-director init --client all --apply
 ```
 
-`all` preflights all supported adapters before writing, installs the 13 project adapters below, and reports skipped clients. It never writes global home-directory settings. If a later concurrent write causes failure, results report partial completion and the failed client; earlier installed configurations remain available with backups. `vscode` remains an alias for `copilot` and is not installed twice by `all`.
+`all` checks every supported adapter before writing, then installs the 13 project adapters below. If a later write fails, the result reports which adapter failed; adapters installed earlier keep their backups. `vscode` is an alias for `copilot` and is not installed twice by `all`.
 
-| Option | Target | Config | Official source |
+| Option | Assistant | Configuration file and key | Documentation |
 |---|---|---|---|
 | `claude` | Claude Code | `.mcp.json`, `mcpServers` | [MCP](https://code.claude.com/docs/en/mcp) |
 | `cursor` | Cursor | `.cursor/mcp.json`, `mcpServers` | [MCP](https://cursor.com/docs/mcp) |
@@ -24,18 +24,22 @@ art-director init --client all --apply
 | `continue` | Continue IDE extension | `.continue/mcpServers/art-director.json`, `mcpServers` | [MCP](https://docs.continue.dev/customize/deep-dives/mcp) |
 | `codebuddy` | CodeBuddy CLI | `.mcp.json`, `mcpServers` | [MCP](https://www.codebuddy.ai/docs/cli/mcp) |
 | `droid` | Droid (Factory) | `.factory/mcp.json`, `mcpServers` | [MCP](https://docs.factory.ai/harness/mcp) |
-| `kilocode` | Current Kilo Code | `.kilo/kilo.json` or existing root/hidden JSONC config, `mcp` | [MCP](https://kilo.ai/docs/automate/mcp/using-in-kilo-code) |
+| `kilocode` | Kilo Code | `.kilo/kilo.json` or existing root/hidden JSONC config, `mcp` | [MCP](https://kilo.ai/docs/automate/mcp/using-in-kilo-code) |
 
-OpenCode and current Kilo use `{type:"local", command:[executable,...args]}` rather than a `command` string plus `args`. Ambiguous multiple config files are refused. Claude, Qoder and CodeBuddy share `.mcp.json`; identical repeat writes are no-ops. Client trust and tool approval settings are not disabled. Existing user/global overrides may still affect discovery.
+OpenCode and Kilo Code use `{type:"local", command:[executable, ...args]}` rather than a `command` string plus `args`. When more than one candidate configuration file exists, the installer stops and asks you to consolidate them. Claude Code, Qoder and CodeBuddy share `.mcp.json`; repeated installs are no-ops. The installer never changes an assistant's trust or tool-approval settings, and user-level settings in the assistant may still take precedence over project files.
 
-Managed workflow rules are currently implemented only for Cursor, Copilot/VS Code and Codex. `--with-rules` on other clients installs MCP configuration and reports a rules warning; it does not invent a rule-file convention.
+Managed workflow rules (`--with-rules`) are available for Cursor (`.cursor/rules/art-director.mdc`), Copilot in VS Code (`.github/instructions/art-director.instructions.md`) and Codex (`AGENTS.md`). Other assistants receive the MCP configuration only.
 
-## Skipped
+Configuration generation, merging, backups and idempotence are covered by the automated test suite on Windows, Linux and macOS. How each assistant discovers and approves the server is defined by that assistant; consult its documentation if the server does not appear after reloading.
 
-- `windsurf`: [official docs](https://docs.windsurf.com/windsurf/cascade/mcp) describe user-global `~/.codeium/windsurf/mcp_config.json`.
-- `antigravity`: [official docs](https://antigravity.google/docs/mcp) describe UI-managed `mcp_config.json`; stable project auto-discovery was not established.
-- `trae`: project path/schema could not be verified from official documentation in this pass.
-- `warp`: [official docs](https://docs.warp.dev/reference/cli/mcp-servers) use application/CLI registration and account sync, not a verified project file.
-- `augment`: [official docs](https://docs.augmentcode.com/setup-augment/mcp) use UI import/user settings; no verified project auto-discovery adapter.
+## Assistants configured outside the project
 
-Skipped names are recognized and return `status: skipped` without file changes. This is not a claim that those products lack MCP support.
+These assistants store MCP servers in user-level settings or through their own UI rather than a project file, so `init` reports them as `skipped` and leaves your files unchanged. Register the server there using the launch command shown by `art-director init --client cursor` (dry run) as a reference.
+
+| Option | Assistant | Where to add the server |
+|---|---|---|
+| `windsurf` | Windsurf | `~/.codeium/windsurf/mcp_config.json` — [docs](https://docs.windsurf.com/windsurf/cascade/mcp) |
+| `antigravity` | Antigravity | MCP settings UI (`mcp_config.json`) — [docs](https://antigravity.google/docs/mcp) |
+| `trae` | Trae | MCP settings UI |
+| `warp` | Warp | Warp settings or `warp mcp` CLI — [docs](https://docs.warp.dev/reference/cli/mcp-servers) |
+| `augment` | Augment | MCP import in the extension settings — [docs](https://docs.augmentcode.com/setup-augment/mcp) |

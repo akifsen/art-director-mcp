@@ -50,7 +50,7 @@ try{
     }
     await server.connect(new StdioServerTransport());
     process.once('SIGTERM',()=>{void server.close();});
-  }else if(cmd==='clients')print({supported:clients,aliases:{vscode:'copilot'},skipped:skippedClients,all:'Installs supported project-scoped adapters only; skips unverified/global adapters.'});
+  }else if(cmd==='clients')print({supported:clients,aliases:{vscode:'copilot'},skipped:skippedClients,all:'Installs every project-scoped adapter; assistants configured through user-level settings are listed under skipped.'});
   else if(cmd==='doctor'){
     const hints:string[]=[];const major=Number(process.versions.node.split('.')[0]);
     if(major<24||major>=27)hints.push(`Node ${process.version} is outside the supported range >=24 <27; install Node 24 LTS.`);

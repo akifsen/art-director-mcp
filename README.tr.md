@@ -4,7 +4,7 @@
 
 Art Director MCP, IDE'nizin yanında yerel olarak çalışır. Proje brief'inden farklı görsel yönler üretir, seçilen kararları sürümlü bir tasarım sözleşmesine dönüştürür ve çalışan arayüzden tarayıcı kanıtı toplar.
 
-[English](README.md) · [İstemci uyumluluğu](docs/clients.md)
+[English](README.md) · [Kurulum referansı](docs/clients.md)
 
 ## Özellikler
 
@@ -68,7 +68,7 @@ npx art-director clients
 
 Kurulum mevcut diğer ayarları ve yorumları korur, yedek oluşturur ve yalnızca proje içinde çalışır. Tekrarlanan kurulum aynı değişiklikleri yeniden yapmaz. `vscode`, `copilot` için alternatif addır.
 
-Cursor, Copilot ve Codex için `--with-rules` ile çalışma yönergesi ekleyebilirsiniz. Yapılandırma testleri dosya üretimini ve birleştirmeyi doğrular; gerçek IDE oturum testleriyle aynı şey değildir. Dosya yolları ve istemci ayrıntıları [uyumluluk belgesindedir](docs/clients.md).
+Cursor, Copilot ve Codex için `--with-rules` ile çalışma yönergesi ekleyebilirsiniz. Dosya yolları, istemciye özel davranış ve proje dosyası yerine kendi ayarlarından yapılandırılan asistanlar [kurulum referansındadır](docs/clients.md).
 
 ## Çalışma akışı
 
@@ -127,7 +127,7 @@ Komutları paketin kurulu olduğu proje klasöründe çalıştırın. Her satır
 |---|---|
 | `--help` | CLI kullanımını, asistan seçeneklerini ve komut adlarını gösterir |
 | `--version` | Paket sürümünü yazdırır |
-| `clients` | Adapter'ları, alternatif adları ve atlama gerekçelerini listeler |
+| `clients` | Adapter'ları, alternatif adları ve proje dışından yapılandırılan asistanları listeler |
 | `init --client cursor --local` | Dosya yazmadan kurulum değişikliklerini önizler |
 | `init --client cursor --apply --local` | Seçilen asistanı mevcut ayarları yedekleyerek projeye ekler |
 | `init --client all --apply --local` | Ön kontrollerden sonra desteklenen tüm proje adapter'larını kurar |

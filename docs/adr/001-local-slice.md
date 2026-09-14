@@ -1,9 +1,24 @@
-# ADR 001: Local vertical slice
+# ADR 001: Local-first architecture
 
-Accepted 2026-09-14. Use the verified stable MCP SDK v2 2.0.0, Node 24 and strict TypeScript. Bundle internal core into the main tarball; do not publish an internal workspace dependency. Browser worker remains an independently installable matching-version package.
+Status: accepted.
 
-Keep two compatible dashboard directions until a third operational recipe exists; the specification explicitly permits explained context restrictions. Do not silently repurpose promotional layouts for dashboards.
+## Runtime and packaging
 
-IDE setup initially generates configuration without applying it. Safe merge, backups and managed rules are pending and `--apply` fails explicitly. This is a bounded development slice, not a claim that all master-prompt acceptance gates are complete.
+- Node 24 LTS, strict TypeScript and the MCP TypeScript SDK v2 (`@modelcontextprotocol/server`).
+- The `core` package (domain logic, workspace access, service layer) is bundled into the published `@akifsen/art-director-mcp` tarball; it is not published as a separate dependency. Core never imports the MCP SDK or Playwright.
+- The browser worker (`@akifsen/art-director-browser`) is an optional, separately installed package. Without it, `audit_ui` returns a `blocked` result with the install command instead of failing the session.
 
-Only numeric loopback hosts are allowed in the initial browser policy. This is narrower than supporting localhost/CDN configuration, but avoids DNS ambiguity. A real redirect regression test showed route.continue was insufficient; fetch with maxRedirects:0 and destination checking is used instead.
+## Design directions
+
+- Directions are recipes selected from validated design packs. Packs are data, never executable plugins.
+- A brief may receive fewer than three directions when its context (for example, a data-dense dashboard) rules out recipes; the result explains the restriction instead of repurposing an unsuitable layout.
+
+## Assistant installation
+
+- `init` writes project-scoped configuration only. Existing files are merged, backed up and never rewritten wholesale; global home-directory settings are never touched.
+- Assistants that configure MCP servers through user-level settings are reported as `skipped` rather than emulated.
+
+## Browser policy
+
+- Only explicitly allowed loopback origins (numeric hosts, `127.0.0.1` and `[::1]`) are audited; other origins must be enabled with `--allow-origin`. Numeric hosts avoid DNS ambiguity.
+- Redirects are validated by fetching with `maxRedirects: 0` and checking the destination against the allow-list before navigation, because intercepting `route.continue` alone does not catch cross-origin redirects.

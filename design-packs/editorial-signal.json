@@ -1,0 +1,56 @@
+{
+  "id": "editorial-signal",
+  "name": "Editorial Signal",
+  "version": "1.0.0",
+  "purpose": "Readable content with an authored typographic hierarchy.",
+  "suitable": [
+    "portfolio",
+    "product"
+  ],
+  "unsuitable": "Dense operational tables should use compact working surfaces.",
+  "colors": {
+    "background": "#f5f0e7",
+    "text": "#212620",
+    "accent": "#9b3523"
+  },
+  "recipes": [
+    {
+      "id": "margin-notes",
+      "composition": "Offset title beside an index; long-form work below.",
+      "grid": "3:7 asymmetric columns",
+      "typography": "Large serif title against compact sans labels",
+      "rhythm": "Introduction → full-width feature → ruled index",
+      "navigation": "rail",
+      "density": "spacious",
+      "mobile": "Index becomes a disclosure before a single reading column.",
+      "assetStrategy": "User-owned project figure with explicit caption; otherwise labeled placeholder."
+    },
+    {
+      "id": "folio",
+      "composition": "Full-width masthead followed by numbered horizontal stories.",
+      "grid": "12-column alternating 8/4 spans",
+      "typography": "Condensed sans masthead with serif reading text",
+      "rhythm": "Masthead → alternating story rows → contact",
+      "navigation": "inline",
+      "density": "balanced",
+      "mobile": "Stories stack in source order; navigation wraps.",
+      "assetStrategy": "Figures appear between stories, never replace semantic text."
+    }
+  ],
+  "states": {
+    "loading": "Preserve geometry; announce busy region without trapping focus.",
+    "empty": "Explain why there is no content and offer a relevant next action.",
+    "error": "Keep entered values; associate error text and expose retry.",
+    "success": "Announce completion politely without moving focus.",
+    "focus": "Visible 2px outline with offset, never clipped.",
+    "disabled": "Use native disabled where applicable; explain unavailable actions.",
+    "menu": "Native button with aria-expanded; Escape closes and restores trigger focus."
+  },
+  "motion": "No entrance animation; short color transitions, respect reduced motion.",
+  "accessibility": [
+    "Keep reading measure near 65ch.",
+    "Preserve heading order and visible links."
+  ],
+  "license": "MIT",
+  "source": "Original project-authored recipes; no external assets."
+}

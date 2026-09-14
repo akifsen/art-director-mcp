@@ -1,0 +1,40 @@
+{
+  "name": "@akifsen/art-director-browser",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=24 <27"
+  },
+  "exports": {
+    ".": "./dist/worker.js"
+  },
+  "dependencies": {
+    "playwright": "1.63.0",
+    "@axe-core/playwright": "4.13.0",
+    "zod": "4.6.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akifsen/art-director-mcp.git",
+    "directory": "packages/browser"
+  },
+  "homepage": "https://github.com/akifsen/art-director-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/akifsen/art-director-mcp/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "mcp",
+    "design",
+    "art-direction",
+    "cursor",
+    "codex",
+    "vscode"
+  ]
+}

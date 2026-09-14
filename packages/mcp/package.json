@@ -1,0 +1,45 @@
+{
+  "name": "@akifsen/art-director-mcp",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Art direction, design contracts and evidence-based UI audits for coding agents",
+  "license": "MIT",
+  "mcpName": "io.github.akifsen/art-director",
+  "bin": {
+    "art-director": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=24 <27"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.0.0",
+    "jsonc-parser": "3.3.1",
+    "smol-toml": "1.8.0",
+    "zod": "4.6.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akifsen/art-director-mcp.git",
+    "directory": "packages/mcp"
+  },
+  "homepage": "https://github.com/akifsen/art-director-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/akifsen/art-director-mcp/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "mcp",
+    "design",
+    "art-direction",
+    "cursor",
+    "codex",
+    "vscode"
+  ]
+}

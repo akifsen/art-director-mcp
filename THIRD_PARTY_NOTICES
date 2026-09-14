@@ -1,0 +1,7 @@
+Original code, recipes and CSS artwork in this repository: MIT (LICENSE).
+No external image dataset, stock image, font download or third-party design pack is included.
+Dependencies retain their own licenses; consult package-lock.json and each dependency's LICENSE.
+MCP TypeScript SDK: MIT. TypeScript and Playwright: Apache-2.0.
+axe-core: MPL-2.0. Zod, React and esbuild: MIT.
+Browser binaries have their own third-party notices and are downloaded separately on explicit opt-in.
+Do not describe third-party dependencies or unknown user assets as CC0.

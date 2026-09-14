@@ -1,0 +1,30 @@
+name: checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  check:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run typecheck
+      - run: npm run build
+      - run: npm test
+      - run: npm run smoke:pack
+      - run: node packages/mcp/dist/cli.js browser install
+      - run: npx playwright install-deps chromium
+        if: runner.os == 'Linux'
+      - run: npm test
+        env:
+          AD_BROWSER_TEST: '1'
+      - run: npm ci --ignore-scripts --prefix examples/expressive-product
+      - run: npm run build --prefix examples/expressive-product

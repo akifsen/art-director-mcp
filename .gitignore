@@ -1,0 +1,21 @@
+node_modules/
+dist/
+*.tgz
+.art-director/cache/
+.art-director/reports/
+.art-director/screenshots/
+.art-director/previews/
+.test-output/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.npmrc
+*.log
+*.art-director-backup-*
+.art-director-install.lock
+.art-director/contract.lock
+
+# Local generated project state
+.art-director/

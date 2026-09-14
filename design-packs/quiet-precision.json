@@ -1,0 +1,57 @@
+{
+  "id": "quiet-precision",
+  "name": "Quiet Precision",
+  "version": "1.0.0",
+  "purpose": "Make operational state and information retrieval legible.",
+  "suitable": [
+    "dashboard",
+    "product",
+    "portfolio"
+  ],
+  "unsuitable": "Avoid using a dense table when visitors need a narrative.",
+  "colors": {
+    "background": "#f3f6f5",
+    "text": "#182f2a",
+    "accent": "#17664e"
+  },
+  "recipes": [
+    {
+      "id": "workbench",
+      "composition": "Navigation rail, task toolbar and primary data region.",
+      "grid": "Fixed 14rem rail and flexible work area",
+      "typography": "Compact sans hierarchy with tabular numbers",
+      "rhythm": "Context → toolbar → table → details",
+      "navigation": "rail",
+      "density": "dense",
+      "mobile": "Rail becomes disclosure; table scrolls within its named region.",
+      "assetStrategy": "Prioritize real data and status text; illustrations only explain empty states."
+    },
+    {
+      "id": "ledger",
+      "composition": "Horizontal context bar followed by grouped semantic records.",
+      "grid": "Single working column with inset summary",
+      "typography": "Serif section labels with tabular sans data",
+      "rhythm": "Summary → grouped records → inline actions",
+      "navigation": "top",
+      "density": "balanced",
+      "mobile": "Records reflow into labeled definition lists.",
+      "assetStrategy": "Use factual records and explicit empty cells, not invented activity."
+    }
+  ],
+  "states": {
+    "loading": "Preserve geometry; announce busy region without trapping focus.",
+    "empty": "Explain why there is no content and offer a relevant next action.",
+    "error": "Keep entered values; associate error text and expose retry.",
+    "success": "Announce completion politely without moving focus.",
+    "focus": "Visible 2px outline with offset, never clipped.",
+    "disabled": "Use native disabled where applicable; explain unavailable actions.",
+    "menu": "Native button with aria-expanded; Escape closes and restores trigger focus."
+  },
+  "motion": "No automatic reordering or animated counters; respect reduced motion.",
+  "accessibility": [
+    "Status includes readable text.",
+    "Table headers are associated; keyboard order follows DOM order."
+  ],
+  "license": "MIT",
+  "source": "Original project-authored recipes; no external assets."
+}

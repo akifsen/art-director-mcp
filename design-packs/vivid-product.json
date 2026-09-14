@@ -1,0 +1,56 @@
+{
+  "id": "vivid-product",
+  "name": "Vivid Product",
+  "version": "1.0.0",
+  "purpose": "Show a real product and make the primary task clear.",
+  "suitable": [
+    "product",
+    "portfolio"
+  ],
+  "unsuitable": "Do not substitute promotional claims for operational data.",
+  "colors": {
+    "background": "#f7f8fc",
+    "text": "#162044",
+    "accent": "#5134bc"
+  },
+  "recipes": [
+    {
+      "id": "product-stage",
+      "composition": "Split explanation and product stage with a persistent top navigation.",
+      "grid": "Equal split, then full-bleed feature band",
+      "typography": "Bold sans headline with medium explanatory text",
+      "rhythm": "Split hero → product evidence → task walkthrough",
+      "navigation": "top",
+      "density": "balanced",
+      "mobile": "Explanation precedes stage; top navigation uses a labeled disclosure.",
+      "assetStrategy": "Real application screenshot or explicit product-preview placeholder, no fabricated metrics."
+    },
+    {
+      "id": "guided-path",
+      "composition": "Task sequence alongside a narrow persistent action rail.",
+      "grid": "2:5:3 task columns",
+      "typography": "Compact sans headings and oversized step numbers",
+      "rhythm": "Task summary → numbered steps → detailed reference",
+      "navigation": "rail",
+      "density": "dense",
+      "mobile": "Actions follow summary, task steps become a list.",
+      "assetStrategy": "Small diagrams explain actual steps; no decorative stock montage."
+    }
+  ],
+  "states": {
+    "loading": "Preserve geometry; announce busy region without trapping focus.",
+    "empty": "Explain why there is no content and offer a relevant next action.",
+    "error": "Keep entered values; associate error text and expose retry.",
+    "success": "Announce completion politely without moving focus.",
+    "focus": "Visible 2px outline with offset, never clipped.",
+    "disabled": "Use native disabled where applicable; explain unavailable actions.",
+    "menu": "Native button with aria-expanded; Escape closes and restores trigger focus."
+  },
+  "motion": "150ms state transitions; disable nonessential movement for reduced motion.",
+  "accessibility": [
+    "Keep CTA labels task-specific.",
+    "Accent is not the only status indicator."
+  ],
+  "license": "MIT",
+  "source": "Original project-authored recipes; no external assets."
+}

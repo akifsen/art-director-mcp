@@ -42,7 +42,7 @@ Assistant expansion: 13 project adapters plus vscode alias and all. 30/30 local 
 
 ## Independent review — 0.2.0
 
-See `docs/reviews/2026-09-14-independent-review.md` for findings, evidence and verification. Summary: boards were structurally similar and typographically identical across recipes (fixed: recipe-driven type system, navigation pattern and composition structure); previews were not openable (fixed: `previewPath`); audit findings were mislabeled as `labels` (fixed: requirement mapping + `requirementResults`); origin refusal and stale-lock messages gave no resolution (fixed); inline budget/pagination were too small (raised to 40 KB / 12000 chars with summaries). 44/44 tests pass on Windows with Node 24.21.0 including browser fixtures. Status of the earlier gates is unchanged unless listed there.
+See `docs/reviews/2026-09-14-independent-review.md` for findings, evidence and verification. Summary: boards were structurally similar and typographically identical across recipes (fixed: recipe-driven type system, navigation pattern and composition structure); previews were not openable (fixed: `previewPath`); audit findings were mislabeled as `labels` (fixed: requirement mapping + `requirementResults`); origin refusal and stale-lock messages gave no resolution (fixed); inline budget/pagination were too small (raised to 40 KB / 12000 chars with summaries). 44/44 tests pass on Windows with Node 24.21.0 including browser fixtures. Published as `@akifsen/art-director-mcp@0.2.0` (latest) from commit `40eaaf0` after CI run 34816046987 passed on Windows, Linux and macOS; registry-installed 0.2.0 verified with CLI, npx installer and real stdio calls. Status of the earlier gates is unchanged unless listed there.
 
 ## npm distribution verification
 

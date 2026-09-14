@@ -39,3 +39,7 @@ Next priority: strengthen worker lifecycle and image artifacts, finish safe IDE 
 The suite now passes 16/16 tests, including all three config adapters, dry-run behavior, preservation of comments and other servers, backup creation, idempotent reruns, malformed configuration refusal and junction rejection. Version-pinned npx launch configuration and durable npm-local mode are implemented. Actual IDE sessions remain untested. GitHub release tarballs provide installation while npm login/publication is pending.
 
 Assistant expansion: 13 project adapters plus vscode alias and all. 30/30 local tests passed. Original GitHub CI run 34803710376 passed on Windows, Linux and macOS; expanded adapter CI is being rerun. Real IDE sessions remain untested. See clients.md for official sources and five skipped clients.
+
+## npm distribution verification
+
+Published @akifsen/art-director-mcp@0.1.1 and @akifsen/art-director-browser@0.1.0 with public access. The main patch fixes Windows npx quoting; worker IPC remains 0.1.0. CI run 34806016474 passed on Windows, Linux and macOS. Registry-downloaded 0.1.1 generated its default npx launcher and passed real MCP initialize, six-tool listing and inspect_project with a space/Unicode project path on Windows. Both npm packages also installed together and worker detection succeeded.

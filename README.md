@@ -1,101 +1,133 @@
 # Art Director MCP
 
-Local art direction, versioned design contracts and rendered UI evidence for coding agents.
+**Give your coding agent a visual direction, a design contract, and evidence to refine the result.**
 
-Early development preview. Source and installable packages are distributed on GitHub. **The npm registry and MCP Registry publications are pending.**
+Art Director MCP runs locally alongside your IDE. It turns a structured project brief into distinct visual directions, records the selected direction as a versioned contract, and collects browser evidence from your running interface.
 
-## Install in your IDE project
+[Installation](#installation) · [Assistants](#assistant-setup) · [Browser audit](#browser-audit) · [Türkçe](README.tr.md)
 
-Requires Node 24 LTS and npm. Run from your project folder. Until npm registry publication, install the GitHub release package:
+## What it does
+
+- **Explore visual directions.** Three design packs offer six compositions with typography, layout, mobile behavior and interface states.
+- **Make decisions explicit.** Generate design contracts, design tokens and CSS custom properties while preserving your project constraints.
+- **Get focused implementation guidance.** Request blueprints for navigation, content, forms, tables and hero sections.
+- **Check the rendered interface.** Collect desktop and mobile screenshots, accessibility findings and horizontal overflow measurements using the optional browser worker.
+
+Your IDE agent handles implementation and visual judgment. Art Director supplies structured decisions and evidence without requiring an additional model API key.
+
+## Installation
+
+Requires **Node.js 24 LTS** and npm. Run these commands inside your project:
 
 ```sh
 npm install --save-dev https://github.com/akifsen/art-director-mcp/releases/download/v0.1.0/akifsen-art-director-mcp-0.1.0.tgz
 npx art-director init --client cursor --apply --local
-# Or choose any supported assistant below instead of cursor.
 ```
 
-One-shot installation without adding a project dependency:
+The package is installed from the [GitHub release](https://github.com/akifsen/art-director-mcp/releases/tag/v0.1.0). `--local` connects your IDE to that installed copy. Reload the IDE and approve the project MCP server when prompted.
+
+## Assistant setup
+
+Replace `cursor` with your assistant's option:
+
+| Assistant | Option |
+|---|---|
+| Claude Code | `claude` |
+| Cursor | `cursor` |
+| GitHub Copilot in VS Code | `copilot` |
+| Kiro | `kiro` |
+| Codex CLI | `codex` |
+| Qoder CLI | `qoder` |
+| Roo Code | `roocode` |
+| Gemini CLI | `gemini` |
+| OpenCode | `opencode` |
+| Continue IDE extension | `continue` |
+| CodeBuddy CLI | `codebuddy` |
+| Droid (Factory) | `droid` |
+| Kilo Code | `kilocode` |
+| All supported assistants | `all` |
 
 ```sh
-npx --yes --package=https://github.com/akifsen/art-director-mcp/releases/download/v0.1.0/akifsen-art-director-mcp-0.1.0.tgz art-director init --client cursor
+# Preview configuration changes
+npx art-director init --client claude --local
+
+# Configure every supported project adapter
+npx art-director init --client all --apply --local
+
+# Show available adapters and configuration details
+npx art-director clients
 ```
 
-The one-shot example is a dry-run. For durable use before npm publication, use the local install above; default generated configuration references the version-pinned npm package and only becomes usable after it is published.
+Setup preserves unrelated settings and comments, creates backups, and keeps configuration inside the project. Repeated installation is idempotent. `vscode` is also accepted as an alias for `copilot`.
 
-After npm registry publication (not available yet):
+For Cursor, Copilot and Codex, add `--with-rules` to include workflow guidance. See the [compatibility reference](docs/clients.md) for configuration paths and client-specific behavior. Adapter tests verify configuration generation and merging; individual IDE sessions are a separate compatibility check.
+
+## Workflow
+
+1. **Inspect** the project's UI files, stack, tokens and asset inventory.
+2. **Compare** visual direction boards built from your brief and content.
+3. **Compile** the selected direction into a versioned design contract.
+4. **Implement** the interface with your IDE agent.
+5. **Audit** the running interface and refine it using the findings.
+
+| MCP tool | Purpose |
+|---|---|
+| `inspect_project` | Inspect the authorized project's UI inventory |
+| `propose_directions` | Generate context-compatible directions and HTML boards |
+| `compile_design_contract` | Create a revisioned contract and token outputs |
+| `get_blueprint` | Retrieve section-specific implementation guidance |
+| `audit_ui` | Collect and report browser evidence |
+| `get_artifact` | Read generated artifacts in bounded pages |
+
+Direction boards are design studies. The number of compatible directions depends on the project context. Contract updates use revision checks to prevent one client from silently overwriting another client's decisions.
+
+## Browser audit
+
+Install the matching optional worker in the same project:
 
 ```sh
-npx -y @akifsen/art-director-mcp@0.1.0 init --client cursor --apply
-npx -y @akifsen/art-director-mcp@0.1.0 init --client codex --apply
-npx -y @akifsen/art-director-mcp@0.1.0 init --client vscode --apply
-# Optional workflow guidance: add --with-rules
+npm install --save-dev https://github.com/akifsen/art-director-mcp/releases/download/v0.1.0/akifsen-art-director-browser-0.1.0.tgz
+npx art-director browser install
 ```
 
-Omit `--apply` to preview the changes. Configurations are project-scoped: Cursor `.cursor/mcp.json`, Codex `.codex/config.toml`, VS Code `.vscode/mcp.json`. Existing unrelated entries and comments are preserved; changed files receive ignored backups. `--local` uses the installed Node and CLI paths instead of npx. Restart/reload the IDE and approve the project MCP server as required by the client. Codex may require trusting the project before loading project configuration. No claim of arbitrary IDE support is made: other MCP-compatible clients can use `art-director serve --project <absolute-path>` with their own configuration.
+Start your application's development server, then add an allowed origin to the Art Director server arguments in your IDE configuration:
 
-## Supported assistants
+```text
+--allow-origin http://127.0.0.1:5187
+```
 
-`claude`, `cursor`, `copilot`, `kiro`, `codex`, `qoder`, `roocode`, `gemini`, `opencode`, `continue`, `codebuddy`, `droid`, `kilocode`; `vscode` aliases Copilot in VS Code. Use `--client all` for every supported project adapter. `art-director clients` lists support and skip reasons.
+Use the port belonging to your application. The worker visits explicitly allowed numeric loopback origins in an isolated browser context. Art Director does not start your application server or use your personal browser profile.
 
-Windsurf, Antigravity, Trae, Warp and Augment are skipped in this version. Configuration formats and exact product variants: [compatibility matrix](docs/clients.md). Config tests do not prove real IDE session integration. All runtime work remains local; users do not trigger this repository's GitHub Actions.
+Audits capture desktop/mobile evidence and run axe accessibility and overflow checks. Automated findings support review; they are not a WCAG certification or an aesthetic score. The IDE agent performs visual evaluation.
 
-## Run from source
+## Local execution and privacy
 
-Requires Node 24 LTS and npm. From this repository:
+The MCP server runs on the user's computer. Using it does not call this repository's GitHub API, trigger GitHub Actions, or connect to the maintainer's computer. Package installation and the explicit browser installation download their dependencies.
+
+No separate Art Director cloud service, telemetry or model API key is used. Tool responses may be processed by your IDE's model provider under that provider's policies.
+
+Reports and screenshots stay in the project's `.art-director/` directory. Screenshot masks affect pixels; DOM findings can still include page content. Review generated evidence before sharing it. See [SECURITY.md](SECURITY.md).
+
+## Develop locally
 
 ```sh
+git clone https://github.com/akifsen/art-director-mcp.git
+cd art-director-mcp
 npm ci --ignore-scripts
 npm run typecheck
 npm run build
 npm test
-node packages/mcp/dist/cli.js doctor
-node packages/mcp/dist/cli.js serve --project /absolute/project
 ```
 
-Windows accepts an absolute Windows project path as a single quoted argument. Generated IDE configuration uses the current absolute Node executable and built CLI, avoiding npx shell resolution. Rebuild before using it.
-
-```sh
-node packages/mcp/dist/cli.js init --client cursor
-node packages/mcp/dist/cli.js init --client codex
-node packages/mcp/dist/cli.js init --client vscode
-```
-
-These commands preview changes. Add `--apply` to merge with backups and `--with-rules` to add managed workflow guidance. Existing malformed configuration is refused.
-
-## Tools
-
-`inspect_project` → `propose_directions` → `compile_design_contract` → host implementation → `audit_ui`. `get_blueprint` provides focused section guidance; `get_artifact` retrieves bounded report pages. All six tools work without MCP resources, sampling or a separate model API key.
-
-Pass the generated direction itself to contract compilation (omit the sibling `previewArtifactId`). `expectedRevision: 0` creates the first contract. Subsequent writes require the current revision. HTML boards are design studies, not application screenshots. Free-text constraints are retained for the host to interpret; only structured navigation/density preferences are automatically enforced.
-
-Three original MIT packs contain six compositions. Dashboard context currently has two compatible recipes, and the tool reports that restriction instead of claiming a third. Generic alias resolution and full DTCG validation are not yet implemented; generated tokens use typed sRGB colors, dimensions and one tested color alias. The Tailwind output targets v4 `@theme` syntax and has not been tested in a Tailwind build.
-
-## Real demo and browser evidence
-
-The React/Vite product demo is in `examples/expressive-product`:
+The repository includes a React/Vite example:
 
 ```sh
 npm ci --ignore-scripts --prefix examples/expressive-product
 npm run dev --prefix examples/expressive-product -- --port 5187 --strictPort
-# Separate terminal, explicit browser opt-in:
-node packages/mcp/dist/cli.js browser install
-node scripts/demo-evidence.mjs
 ```
 
-The source workspace includes the separate browser package. A standalone installation must install the matching local browser tarball first. The main tarball does not depend on Playwright and has no postinstall. Browser installation fetches Playwright's pinned Chromium headless shell and support binaries into the normal Playwright cache.
+Windows, Linux and macOS are covered by the [CI workflow](https://github.com/akifsen/art-director-mcp/actions/workflows/ci.yml), including package installation and browser checks. See [CONTRIBUTING.md](CONTRIBUTING.md) for development instructions.
 
-For MCP browser use, pass `--allow-origin http://127.0.0.1:5187` at server startup. Only explicitly allowed numeric loopback origins are accepted; localhost DNS, private networks, credentials, unlisted ports, redirects and subresources are restricted. WebSockets and service workers are blocked. The server never launches your dev server.
+## License
 
-Screenshots are local and may contain private information. `maskSelectors` masks screenshots only; DOM findings can still expose page data. There is no automatic retention cleanup yet; remove local reports/screenshots manually when appropriate. The worker uses isolated browser contexts without personal profiles.
-
-## Verification and limits
-
-Native Windows / Node 24.13.0: typecheck, build, real SDK v2 stdio and live Chromium tests executed. Cursor, Codex and VS Code: configuration merge tested, actual IDE sessions **not tested**. macOS/Linux: CI configured, **not tested locally**. See `docs/status.md` for exact acceptance gaps and commands.
-
-Browser findings include axe checks and document overflow at desktop/mobile sizes, plus one Tab focus observation. This is not full keyboard/state coverage, WCAG certification, visual quality scoring or source-line mapping. Visual review belongs to the host. Historical evidence is marked unverified, and unavailable capabilities return blocked/partial results.
-
-No telemetry, separate cloud upload, LLM key, model download or GPU is required. Tool results sent to your IDE may be processed by its model provider. Source files and pages are untrusted data. Filesystem checks are defense in depth, not an OS sandbox against another process racing filesystem mutations.
-
-Performance targets in the original spec are unmeasured. No superiority or aesthetic benchmark claims are made. Scan currently hashes bounded sources on demand; incremental caching is pending.
-
-See `README.tr.md`, `SECURITY.md`, `CONTRIBUTING.md` and `docs/release-checklist.md`.
+[MIT](LICENSE). Third-party dependencies retain their own licenses; see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).

@@ -11,7 +11,7 @@ Requires Node 24 LTS and npm. Run from your project folder. Until npm registry p
 ```sh
 npm install --save-dev https://github.com/akifsen/art-director-mcp/releases/download/v0.1.0/akifsen-art-director-mcp-0.1.0.tgz
 npx art-director init --client cursor --apply --local
-# Or choose codex / vscode instead of cursor.
+# Or choose any supported assistant below instead of cursor.
 ```
 
 One-shot installation without adding a project dependency:
@@ -32,6 +32,12 @@ npx -y @akifsen/art-director-mcp@0.1.0 init --client vscode --apply
 ```
 
 Omit `--apply` to preview the changes. Configurations are project-scoped: Cursor `.cursor/mcp.json`, Codex `.codex/config.toml`, VS Code `.vscode/mcp.json`. Existing unrelated entries and comments are preserved; changed files receive ignored backups. `--local` uses the installed Node and CLI paths instead of npx. Restart/reload the IDE and approve the project MCP server as required by the client. Codex may require trusting the project before loading project configuration. No claim of arbitrary IDE support is made: other MCP-compatible clients can use `art-director serve --project <absolute-path>` with their own configuration.
+
+## Supported assistants
+
+`claude`, `cursor`, `copilot`, `kiro`, `codex`, `qoder`, `roocode`, `gemini`, `opencode`, `continue`, `codebuddy`, `droid`, `kilocode`; `vscode` aliases Copilot in VS Code. Use `--client all` for every supported project adapter. `art-director clients` lists support and skip reasons.
+
+Windsurf, Antigravity, Trae, Warp and Augment are skipped in this version. Configuration formats and exact product variants: [compatibility matrix](docs/clients.md). Config tests do not prove real IDE session integration. All runtime work remains local; users do not trigger this repository's GitHub Actions.
 
 ## Run from source
 

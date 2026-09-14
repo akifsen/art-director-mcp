@@ -7,12 +7,15 @@ import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
 import path from 'node:path';
 import {install} from './install.js';
+import {clients,skippedClients,supportedClientNames} from './clients.js';
 import {Workspace,Service,toolSchemas,DomainError,VERSION,packSchema,type ToolName,type BrowserRunner} from '../../core/src/index.js';
 
 const require=createRequire(import.meta.url);
 const {values,positionals}=parseArgs({allowPositionals:true,options:{project:{type:'string'},brief:{type:'string'},direction:{type:'string'},'expected-revision':{type:'string'},url:{type:'string'},'contract-id':{type:'string'},'allow-origin':{type:'string',multiple:true},client:{type:'string'},apply:{type:'boolean'},local:{type:'boolean'},help:{type:'boolean'},'with-rules':{type:'boolean'}}});
 const ws=await Workspace.open(path.resolve(values.project??process.cwd()));
-let worker:string|undefined;try{worker=require.resolve('@akifsen/art-director-browser');}catch{/* Explicit optional install. */}
+let worker:string|undefined;try{worker=require.resolve('@akifsen/art-director-browser');}catch{
+  try{worker=createRequire(path.join(ws.root,'package.json')).resolve('@akifsen/art-director-browser');}catch{/* Explicit optional install. */}
+}
 let running=false;
 const runner:BrowserRunner=async(url,origins,masks,signal)=>{
   if(running)throw new DomainError('AUDIT_BUSY','One browser audit at a time per server');running=true;
@@ -31,7 +34,7 @@ const service=new Service(ws,worker?runner:undefined,values['allow-origin']??[])
 const print=(data:unknown)=>process.stdout.write(JSON.stringify(data,null,2)+'\n');
 try{
   const cmd=positionals[0]??'doctor';
-  if(values.help){print({usage:'art-director init --client cursor|codex|vscode [--apply] [--with-rules] [--local] [--project absolute-path]',commands:['serve','doctor','inspect','directions','contract','audit','browser install','pack validate'],version:VERSION});}
+  if(values.help){print({usage:'art-director init --client <assistant|all> [--apply] [--with-rules] [--local] [--project absolute-path]',clients:supportedClientNames,skippedClients,commands:['clients','serve','doctor','inspect','directions','contract','audit','browser install','pack validate'],version:VERSION});}
   else if(cmd==='serve'){
     const server=new McpServer({name:'art-director',version:VERSION});
     for(const name of Object.keys(toolSchemas) as ToolName[]){
@@ -42,20 +45,22 @@ try{
     }
     await server.connect(new StdioServerTransport());
     process.once('SIGTERM',()=>{void server.close();});
-  }else if(cmd==='doctor')print({version:VERSION,node:process.version,platform:process.platform,root:ws.root,browserWorker:Boolean(worker),origins:values['allow-origin']??[]});
+  }else if(cmd==='clients')print({supported:clients,aliases:{vscode:'copilot'},skipped:skippedClients,all:'Installs supported project-scoped adapters only; skips unverified/global adapters.'});
+  else if(cmd==='doctor')print({version:VERSION,node:process.version,platform:process.platform,root:ws.root,browserWorker:Boolean(worker),origins:values['allow-origin']??[]});
   else if(cmd==='inspect')print(await service.call('inspect_project',{}));
   else if(cmd==='directions')print(await service.call('propose_directions',{brief:JSON.parse(await ws.read(values.brief??'brief.json'))}));
   else if(cmd==='contract')print(await service.call('compile_design_contract',{direction:JSON.parse(await ws.read(values.direction??'direction.json')),expectedRevision:Number(values['expected-revision']??0)}));
   else if(cmd==='audit')print(await service.call('audit_ui',{contractId:values['contract-id'],url:values.url}));
   else if(cmd==='pack'&&positionals[1]==='validate')print(packSchema.parse(JSON.parse(await ws.read(positionals[2]??''))));
   else if(cmd==='browser'&&positionals[1]==='install'){
-    if(!worker)throw new DomainError('BROWSER_NOT_INSTALLED','Install the matching local @akifsen/art-director-browser@0.1.0 tarball first; no published package is assumed.');
+    if(!worker)throw new DomainError('BROWSER_NOT_INSTALLED','Install @akifsen/art-director-browser@0.1.0 in the project first: npm install --save-dev @akifsen/art-director-browser@0.1.0');
     process.stderr.write('Opt-in: installing Playwright 1.63.0 Chromium headless shell into the Playwright browser cache.\n');
     const workerRequire=createRequire(worker);const cli=path.join(path.dirname(workerRequire.resolve('playwright/package.json')),'cli.js');
     const child=spawn(process.execPath,[cli,'install','chromium','--only-shell'],{stdio:'inherit'});
     child.once('exit',code=>{process.exitCode=code??1;});
   }else if(cmd==='init'){
-    print(await install(ws.root,values.client,fileURLToPath(import.meta.url),{apply:values.apply??false,local:values.local??false,rules:values['with-rules']??false}));
+    const result=await install(ws.root,values.client,fileURLToPath(import.meta.url),{apply:values.apply??false,local:values.local??false,rules:values['with-rules']??false});
+    print(result);if(result.status==='partial')process.exitCode=1;
   }else throw new Error('Unknown command');
 }catch(e){process.stderr.write(JSON.stringify({code:e instanceof DomainError?e.code:'ERROR',message:(e as Error).message})+'\n');process.exitCode=1;}
 

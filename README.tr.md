@@ -23,3 +23,5 @@ npx art-director init --client cursor --apply --local
 ```
 
 `cursor` yerine `codex` veya `vscode` seçilebilir. `--apply` olmadan önizleme, `--with-rules` ile isteğe bağlı ajan kuralı oluşturulur. Mevcut ayarlar korunur ve yedeklenir. npm registry yayımlandığında kısa `npx -y @akifsen/art-director-mcp@0.1.0 init --client cursor --apply` komutu kullanılabilir. Gerçek IDE oturumları henüz test edilmedi.
+
+Desteklenen seçenekler: `claude`, `cursor`, `copilot`, `kiro`, `codex`, `qoder`, `roocode`, `gemini`, `opencode`, `continue`, `codebuddy`, `droid`, `kilocode`, `all`. `vscode` eski ad olarak korunur. `all` doğrulanmış proje adapter’larını kurar; global ayarları değiştirmez. Atlananlar: Windsurf, Antigravity, Trae, Warp, Augment. Ayrıntılar: [istemci matrisi](docs/clients.md).

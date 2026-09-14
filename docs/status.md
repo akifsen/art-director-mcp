@@ -37,3 +37,5 @@ Next priority: strengthen worker lifecycle and image artifacts, finish safe IDE 
 ## GitHub distribution preparation
 
 The suite now passes 16/16 tests, including all three config adapters, dry-run behavior, preservation of comments and other servers, backup creation, idempotent reruns, malformed configuration refusal and junction rejection. Version-pinned npx launch configuration and durable npm-local mode are implemented. Actual IDE sessions remain untested. GitHub release tarballs provide installation while npm login/publication is pending.
+
+Assistant expansion: 13 project adapters plus vscode alias and all. 30/30 local tests passed. Original GitHub CI run 34803710376 passed on Windows, Linux and macOS; expanded adapter CI is being rerun. Real IDE sessions remain untested. See clients.md for official sources and five skipped clients.

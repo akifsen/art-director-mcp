@@ -4,9 +4,8 @@ import {randomUUID} from 'node:crypto';
 import {parse as parseToml} from 'smol-toml';
 import {parse,modify,applyEdits,type ParseError} from 'jsonc-parser';
 import {DomainError,VERSION} from '../../core/src/domain.js';
+import {clients,skippedClients,supportedClientNames} from './clients.js';
 
-const targets={cursor:'.cursor/mcp.json',codex:'.codex/config.toml',vscode:'.vscode/mcp.json'} as const;
-type Client=keyof typeof targets;
 const start='# BEGIN art-director managed configuration';
 const end='# END art-director managed configuration';
 const ruleStart='<!-- BEGIN art-director managed rule -->';
@@ -32,11 +31,35 @@ export function launchConfig(root:string,cli:string,local:boolean){
   }
   return {command:'npx',args};
 }
-export async function install(root:string,clientName:string|undefined,cli:string,options:{apply:boolean;local:boolean;rules:boolean}){
-  if(!clientName||!(clientName in targets))throw new Error('Choose --client cursor|codex|vscode');
-  const client=clientName as Client;const target=targets[client];const before=await read(root,target);
+type InstallOptions={apply:boolean;local:boolean;rules:boolean};
+export async function install(root:string,clientName:string|undefined,cli:string,options:InstallOptions):Promise<Record<string,unknown>>{
+  if(clientName==='all'){
+    // Preflight every supported adapter before the first mutation.
+    for(const name of Object.keys(clients))await installOne(root,name,cli,{...options,apply:false});
+    const results=[];
+    for(const name of Object.keys(clients)){
+      try{results.push(await installOne(root,name,cli,options));}
+      catch(e){return {client:'all',status:'partial',results,failedClient:name,error:(e as Error).message,skipped:skippedClients};}
+    }
+    return {client:'all',status:options.apply?'installed':'dry-run',results,skipped:skippedClients};
+  }
+  if(clientName&&Object.hasOwn(skippedClients,clientName))return {client:clientName,status:'skipped',reason:skippedClients[clientName],changes:[]};
+  if(!clientName||!supportedClientNames.includes(clientName))throw new Error('Choose --client '+supportedClientNames.join('|'));
+  return installOne(root,clientName==='vscode'?'copilot':clientName,cli,options);
+}
+async function installOne(root:string,client:string,cli:string,options:InstallOptions){
+  const spec=clients[client]!;
+  let target=spec.path;
+  const existing=[];
+  for(const candidate of [spec.path,...spec.alternates??[]]){
+    const candidatePath=await safePath(root,candidate);
+    try{await fs.stat(candidatePath);existing.push(candidate);}catch(e){if((e as NodeJS.ErrnoException).code!=='ENOENT')throw e;}
+  }
+  if(existing.length>1)throw new Error(`Multiple ${spec.label} config files found; consolidate them before installing`);
+  if(existing[0])target=existing[0];
+  const before=await read(root,target);
   const launch=launchConfig(root,cli,options.local);let after:string;
-  if(client==='codex'){
+  if(spec.format==='toml'){
     const parsed=parseToml(before);const existing=(parsed.mcp_servers as Record<string,unknown>|undefined)?.['art-director'];
     const block=`${start}\n[mcp_servers.art-director]\ncommand = ${JSON.stringify(launch.command)}\nargs = ${JSON.stringify(launch.args)}\n${end}`;
     const a=before.indexOf(start),b=before.indexOf(end);
@@ -47,18 +70,20 @@ export async function install(root:string,clientName:string|undefined,cli:string
   }else{
     const errors:ParseError[]=[];const parsed=parse(before||'{}',errors,{allowTrailingComma:true});
     if(errors.length||!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw new Error('Invalid existing JSONC configuration; no files changed');
-    const key=client==='cursor'?'mcpServers':'servers';
+    const key=spec.format==='vscode'?'servers':spec.format==='local-array'?'mcp':'mcpServers';
     if(parsed[key]&&(typeof parsed[key]!=='object'||Array.isArray(parsed[key])))throw new Error('Server map must be an object');
     // Preserve unrelated entries and comments. Only the named entry is managed.
-    after=applyEdits(before||'{}',modify(before||'{}',[key,'art-director'],{type:'stdio',...launch},{formattingOptions:{insertSpaces:true,tabSize:2,eol:'\n'}}));
+    const entry=spec.format==='local-array'?{type:'local',command:[launch.command,...launch.args],enabled:true}:{type:'stdio',...launch};
+    after=applyEdits(before||'{}',modify(before||'{}',[key,'art-director'],entry,{formattingOptions:{insertSpaces:true,tabSize:2,eol:'\n'}}));
   }
   const changes:{path:string;before:string;after:string}[]=[{path:target,before,after}];
   const gitBefore=await read(root,'.gitignore');
   const ignore=['.art-director/cache/','.art-director/reports/','.art-director/screenshots/','.art-director/previews/','*.art-director-backup-*'];
   const missing=ignore.filter(line=>!gitBefore.split(/\r?\n/).includes(line));
   if(missing.length)changes.push({path:'.gitignore',before:gitBefore,after:gitBefore+(gitBefore&&!gitBefore.endsWith('\n')?'\n':'')+missing.join('\n')+'\n'});
-  if(options.rules){
-    const file=client==='cursor'?'.cursor/rules/art-director.mdc':client==='vscode'?'.github/instructions/art-director.instructions.md':'AGENTS.md';
+  const supportsRules=['cursor','copilot','codex'].includes(client);
+  if(options.rules&&supportsRules){
+    const file=client==='cursor'?'.cursor/rules/art-director.mdc':client==='copilot'?'.github/instructions/art-director.instructions.md':'AGENTS.md';
     const previous=await read(root,file);const block=`${ruleStart}\n${workflow}\n${ruleEnd}`;
     const a=previous.indexOf(ruleStart),b=previous.indexOf(ruleEnd);
     if((a<0)!==(b<0)||a>=0&&b<a)throw new Error('Malformed managed rule');
@@ -80,5 +105,5 @@ export async function install(root:string,clientName:string|undefined,cli:string
     finally{await handle.close();await fs.rm(lock);}
   }
   // Existing config may contain secrets. Never echo it in dry-run output.
-  return {client,status:options.apply?'installed':'dry-run',launch,changes:changed.map(c=>({path:c.path,action:c.before?'merge':'create'})),backups,ruleEnabled:options.rules,local:options.local};
+  return {client,label:spec.label,status:options.apply?'installed':'dry-run',launch,changes:changed.map(c=>({path:c.path,action:c.before?'merge':'create'})),backups,ruleEnabled:options.rules&&supportsRules,warnings:options.rules&&!supportsRules?['Managed host rules are not verified for this client; MCP configuration only.']:[],local:options.local};
 }

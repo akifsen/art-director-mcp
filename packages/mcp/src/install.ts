@@ -27,7 +27,7 @@ export function launchConfig(root:string,cli:string,local:boolean){
   const args=['-y',`@akifsen/art-director-mcp@${VERSION}`,'serve','--project',root];
   if(process.platform==='win32'){
     if(/["&|<>^%!\r\n]/.test(root))throw new Error('This Windows path needs an npm install and init --local to avoid shell metacharacters');
-    return {command:'cmd',args:['/d','/s','/c',`npx ${args.map(s=>'"'+s+'"').join(' ')}`]};
+    return {command:'cmd',args:['/d','/c','npx',...args]};
   }
   return {command:'npx',args};
 }

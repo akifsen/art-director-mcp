@@ -1,7 +1,7 @@
 import {createHash} from 'node:crypto';
 import {z} from 'zod';
 
-export const VERSION = '0.1.0';
+export const VERSION = '0.1.1';
 export class DomainError extends Error {
   constructor(public code: string, message: string) { super(message); }
 }

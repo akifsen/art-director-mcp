@@ -20,11 +20,19 @@ Uygulama kodunu ve görsel değerlendirmeyi IDE ajanınız yapar. Art Director e
 **Node.js 24 LTS** ve npm gerekir. Projenizin klasöründe çalıştırın:
 
 ```sh
-npm install --save-dev https://github.com/akifsen/art-director-mcp/releases/download/v0.1.0/akifsen-art-director-mcp-0.1.0.tgz
+npx -y @akifsen/art-director-mcp@0.1.1 init --client cursor --apply
+```
+
+[npm paketi](https://www.npmjs.com/package/@akifsen/art-director-mcp), IDE'yi sabitlenmiş sürümü yerel çalıştıracak şekilde yapılandırır. IDE'yi yeniden yükleyip gerektiğinde MCP sunucusunu onaylayın.
+
+Alternatif olarak paketi projeye kurup `--local` ile o kopyaya bağlayın:
+
+```sh
+npm install --save-dev @akifsen/art-director-mcp@0.1.1
 npx art-director init --client cursor --apply --local
 ```
 
-Paket [GitHub sürümünden](https://github.com/akifsen/art-director-mcp/releases/tag/v0.1.0) kurulur. `--local`, IDE'yi projenize kurulmuş kopyaya bağlar. IDE'yi yeniden yükleyip gerektiğinde MCP sunucusunu onaylayın.
+İki yöntem de bilgisayarınızda çalışır. `--local` kurulu kopyayı seçer; verilmezse IDE sabitlenmiş paketi npx üzerinden başlatır.
 
 ## Asistan seçimi
 
@@ -171,8 +179,8 @@ Brief, yön ve paket dosyası yolları seçilen proje köküne göredir; kök d�
 İsteğe bağlı bileşeni aynı projeye kurun:
 
 ```sh
-npm install --save-dev https://github.com/akifsen/art-director-mcp/releases/download/v0.1.0/akifsen-art-director-browser-0.1.0.tgz
-npx art-director browser install
+npm install --save-dev @akifsen/art-director-browser@0.1.0
+npx -y @akifsen/art-director-mcp@0.1.1 browser install
 ```
 
 Uygulamanızın geliştirme sunucusunu başlatın. IDE yapılandırmasındaki Art Director sunucu argümanlarına uygulamanızın portuyla izinli origin ekleyin:

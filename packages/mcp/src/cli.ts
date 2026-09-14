@@ -27,7 +27,7 @@ const runner:BrowserRunner=async(url,origins,masks,signal)=>{
     signal?.addEventListener('abort',abort,{once:true});
     child.on('error',e=>done(e));child.on('exit',code=>{if(code)done(new DomainError('BROWSER_CRASH','Browser worker exited'));});
     child.once('message',(m:{ok:boolean;result:unknown;error:string})=>done(m.ok?undefined:new DomainError(m.error.includes('Executable')?'BROWSER_NOT_INSTALLED':m.error==='ORIGIN_NOT_ALLOWED'?'ORIGIN_NOT_ALLOWED':'AUDIT_FAILED',m.error.slice(0,1000)),m.result));
-    child.send({version:VERSION,url,origins,masks});
+    child.send({version:'0.1.0',url,origins,masks});
   });}finally{running=false;}
 };
 const service=new Service(ws,worker?runner:undefined,values['allow-origin']??[]);

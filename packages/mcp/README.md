@@ -20,11 +20,19 @@ Your IDE agent handles implementation and visual judgment. Art Director supplies
 Requires **Node.js 24 LTS** and npm. Run these commands inside your project:
 
 ```sh
-npm install --save-dev https://github.com/akifsen/art-director-mcp/releases/download/v0.1.0/akifsen-art-director-mcp-0.1.0.tgz
+npx -y @akifsen/art-director-mcp@0.1.1 init --client cursor --apply
+```
+
+The [npm package](https://www.npmjs.com/package/@akifsen/art-director-mcp) configures your IDE to run a pinned version locally. Reload the IDE and approve the project MCP server when prompted.
+
+Alternatively, add the package to your project and bind that copy with `--local`:
+
+```sh
+npm install --save-dev @akifsen/art-director-mcp@0.1.1
 npx art-director init --client cursor --apply --local
 ```
 
-The package is installed from the [GitHub release](https://github.com/akifsen/art-director-mcp/releases/tag/v0.1.0). `--local` connects your IDE to that installed copy. Reload the IDE and approve the project MCP server when prompted.
+Both modes run on your computer. `--local` chooses the installed copy; without it the IDE launches the pinned package through npx.
 
 ## Assistant setup
 
@@ -167,8 +175,8 @@ Brief, direction and pack file paths are relative to the selected project. They 
 Install the matching optional worker in the same project:
 
 ```sh
-npm install --save-dev https://github.com/akifsen/art-director-mcp/releases/download/v0.1.0/akifsen-art-director-browser-0.1.0.tgz
-npx art-director browser install
+npm install --save-dev @akifsen/art-director-browser@0.1.0
+npx -y @akifsen/art-director-mcp@0.1.1 browser install
 ```
 
 Start your application's development server, then add an allowed origin to the Art Director server arguments in your IDE configuration:

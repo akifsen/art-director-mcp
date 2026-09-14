@@ -40,6 +40,10 @@ The suite now passes 16/16 tests, including all three config adapters, dry-run b
 
 Assistant expansion: 13 project adapters plus vscode alias and all. 30/30 local tests passed. Original GitHub CI run 34803710376 passed on Windows, Linux and macOS; expanded adapter CI is being rerun. Real IDE sessions remain untested. See clients.md for official sources and five skipped clients.
 
+## Independent review — 0.2.0
+
+See `docs/reviews/2026-09-14-independent-review.md` for findings, evidence and verification. Summary: boards were structurally similar and typographically identical across recipes (fixed: recipe-driven type system, navigation pattern and composition structure); previews were not openable (fixed: `previewPath`); audit findings were mislabeled as `labels` (fixed: requirement mapping + `requirementResults`); origin refusal and stale-lock messages gave no resolution (fixed); inline budget/pagination were too small (raised to 40 KB / 12000 chars with summaries). 44/44 tests pass on Windows with Node 24.21.0 including browser fixtures. Status of the earlier gates is unchanged unless listed there.
+
 ## npm distribution verification
 
 Published @akifsen/art-director-mcp@0.1.1 and @akifsen/art-director-browser@0.1.0 with public access. The main patch fixes Windows npx quoting; worker IPC remains 0.1.0. CI run 34806016474 passed on Windows, Linux and macOS. Registry-downloaded 0.1.1 generated its default npx launcher and passed real MCP initialize, six-tool listing and inspect_project with a space/Unicode project path on Windows. Both npm packages also installed together and worker detection succeeded.

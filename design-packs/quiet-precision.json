@@ -1,7 +1,7 @@
 {
   "id": "quiet-precision",
   "name": "Quiet Precision",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "purpose": "Make operational state and information retrieval legible.",
   "suitable": [
     "dashboard",
@@ -24,7 +24,13 @@
       "navigation": "rail",
       "density": "dense",
       "mobile": "Rail becomes disclosure; table scrolls within its named region.",
-      "assetStrategy": "Prioritize real data and status text; illustrations only explain empty states."
+      "assetStrategy": "Prioritize real data and status text; illustrations only explain empty states.",
+      "type": {
+        "heading": "sans",
+        "body": "sans",
+        "headingWeight": 600,
+        "numerals": "tabular"
+      }
     },
     {
       "id": "ledger",
@@ -35,7 +41,13 @@
       "navigation": "top",
       "density": "balanced",
       "mobile": "Records reflow into labeled definition lists.",
-      "assetStrategy": "Use factual records and explicit empty cells, not invented activity."
+      "assetStrategy": "Use factual records and explicit empty cells, not invented activity.",
+      "type": {
+        "heading": "serif",
+        "body": "sans",
+        "headingWeight": 500,
+        "numerals": "tabular"
+      }
     }
   ],
   "states": {

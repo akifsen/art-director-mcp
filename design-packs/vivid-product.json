@@ -1,7 +1,7 @@
 {
   "id": "vivid-product",
   "name": "Vivid Product",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "purpose": "Show a real product and make the primary task clear.",
   "suitable": [
     "product",
@@ -23,7 +23,13 @@
       "navigation": "top",
       "density": "balanced",
       "mobile": "Explanation precedes stage; top navigation uses a labeled disclosure.",
-      "assetStrategy": "Real application screenshot or explicit product-preview placeholder, no fabricated metrics."
+      "assetStrategy": "Real application screenshot or explicit product-preview placeholder, no fabricated metrics.",
+      "type": {
+        "heading": "sans",
+        "body": "sans",
+        "headingWeight": 800,
+        "numerals": "proportional"
+      }
     },
     {
       "id": "guided-path",
@@ -34,7 +40,13 @@
       "navigation": "rail",
       "density": "dense",
       "mobile": "Actions follow summary, task steps become a list.",
-      "assetStrategy": "Small diagrams explain actual steps; no decorative stock montage."
+      "assetStrategy": "Small diagrams explain actual steps; no decorative stock montage.",
+      "type": {
+        "heading": "sans",
+        "body": "sans",
+        "headingWeight": 600,
+        "numerals": "tabular"
+      }
     }
   ],
   "states": {

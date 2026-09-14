@@ -1,7 +1,7 @@
 {
   "id": "editorial-signal",
   "name": "Editorial Signal",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "purpose": "Readable content with an authored typographic hierarchy.",
   "suitable": [
     "portfolio",
@@ -23,7 +23,13 @@
       "navigation": "rail",
       "density": "spacious",
       "mobile": "Index becomes a disclosure before a single reading column.",
-      "assetStrategy": "User-owned project figure with explicit caption; otherwise labeled placeholder."
+      "assetStrategy": "User-owned project figure with explicit caption; otherwise labeled placeholder.",
+      "type": {
+        "heading": "serif",
+        "body": "serif",
+        "headingWeight": 400,
+        "numerals": "proportional"
+      }
     },
     {
       "id": "folio",
@@ -34,7 +40,13 @@
       "navigation": "inline",
       "density": "balanced",
       "mobile": "Stories stack in source order; navigation wraps.",
-      "assetStrategy": "Figures appear between stories, never replace semantic text."
+      "assetStrategy": "Figures appear between stories, never replace semantic text.",
+      "type": {
+        "heading": "condensed",
+        "body": "serif",
+        "headingWeight": 800,
+        "numerals": "proportional"
+      }
     }
   ],
   "states": {

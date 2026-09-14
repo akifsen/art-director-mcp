@@ -5,14 +5,17 @@ import {parseArgs} from 'node:util';
 import {fork,spawn} from 'node:child_process';
 import {createRequire} from 'node:module';
 import {fileURLToPath} from 'node:url';
+import {existsSync} from 'node:fs';
 import path from 'node:path';
 import {install} from './install.js';
 import {clients,skippedClients,supportedClientNames} from './clients.js';
 import {Workspace,Service,toolSchemas,DomainError,VERSION,packSchema,type ToolName,type BrowserRunner} from '../../core/src/index.js';
 
 const require=createRequire(import.meta.url);
-const {values,positionals}=parseArgs({allowPositionals:true,options:{project:{type:'string'},brief:{type:'string'},direction:{type:'string'},'expected-revision':{type:'string'},url:{type:'string'},'contract-id':{type:'string'},'allow-origin':{type:'string',multiple:true},client:{type:'string'},apply:{type:'boolean'},local:{type:'boolean'},help:{type:'boolean'},'with-rules':{type:'boolean'}}});
-const ws=await Workspace.open(path.resolve(values.project??process.cwd()));
+const {values,positionals}=parseArgs({allowPositionals:true,options:{project:{type:'string'},brief:{type:'string'},direction:{type:'string'},'expected-revision':{type:'string'},url:{type:'string'},'contract-id':{type:'string'},'allow-origin':{type:'string',multiple:true},client:{type:'string'},apply:{type:'boolean'},local:{type:'boolean'},help:{type:'boolean'},version:{type:'boolean'},'with-rules':{type:'boolean'}}});
+if(values.version){process.stdout.write(VERSION+'\n');process.exit(0);}
+const ws=await Workspace.open(path.resolve(values.project??process.cwd())).catch(e=>{
+  process.stderr.write(JSON.stringify({code:e instanceof DomainError?e.code:'PROJECT_NOT_FOUND',message:`Project root ${path.resolve(values.project??process.cwd())} is not usable: ${(e as Error).message}. Pass --project <absolute existing directory>.`})+'\n');process.exit(1);});
 let worker:string|undefined;try{worker=require.resolve('@akifsen/art-director-browser');}catch{
   try{worker=createRequire(path.join(ws.root,'package.json')).resolve('@akifsen/art-director-browser');}catch{/* Explicit optional install. */}
 }
@@ -21,7 +24,9 @@ const runner:BrowserRunner=async(url,origins,masks,signal)=>{
   if(running)throw new DomainError('AUDIT_BUSY','One browser audit at a time per server');running=true;
   try{return await new Promise((resolve,reject)=>{
     const child=fork(worker!,[],{stdio:['ignore','ignore','pipe','ipc']});
-    const done=(error?:Error,result?:unknown)=>{clearTimeout(timer);signal?.removeEventListener('abort',abort);child.kill();error?reject(error):resolve(result);};
+    // Drain stderr so a chatty worker cannot block on a full pipe; keep the tail for crash diagnostics.
+    let stderrTail='';child.stderr?.on('data',(chunk:Buffer)=>{stderrTail=(stderrTail+chunk.toString()).slice(-1000);});
+    const done=(error?:Error,result?:unknown)=>{clearTimeout(timer);signal?.removeEventListener('abort',abort);child.kill();if(error&&error instanceof DomainError&&error.code==='BROWSER_CRASH'&&stderrTail)error.message+=` — worker stderr: ${stderrTail.trim()}`;error?reject(error):resolve(result);};
     const abort=()=>done(new DomainError('AUDIT_CANCELLED','Audit cancelled'));
     const timer=setTimeout(()=>done(new DomainError('AUDIT_TIMEOUT','Browser audit exceeded 45 seconds')),45000);
     signal?.addEventListener('abort',abort,{once:true});
@@ -34,7 +39,7 @@ const service=new Service(ws,worker?runner:undefined,values['allow-origin']??[])
 const print=(data:unknown)=>process.stdout.write(JSON.stringify(data,null,2)+'\n');
 try{
   const cmd=positionals[0]??'doctor';
-  if(values.help){print({usage:'art-director init --client <assistant|all> [--apply] [--with-rules] [--local] [--project absolute-path]',clients:supportedClientNames,skippedClients,commands:['clients','serve','doctor','inspect','directions','contract','audit','browser install','pack validate'],version:VERSION});}
+  if(values.help){print({usage:'art-director init --client <assistant|all> [--apply] [--with-rules] [--local] [--project absolute-path]',clients:supportedClientNames,skippedClients,commands:['clients','serve','doctor','inspect','directions','contract','audit','browser install','pack validate'],flags:['--help','--version','--project','--allow-origin (repeatable)'],version:VERSION});}
   else if(cmd==='serve'){
     const server=new McpServer({name:'art-director',version:VERSION});
     for(const name of Object.keys(toolSchemas) as ToolName[]){
@@ -46,7 +51,23 @@ try{
     await server.connect(new StdioServerTransport());
     process.once('SIGTERM',()=>{void server.close();});
   }else if(cmd==='clients')print({supported:clients,aliases:{vscode:'copilot'},skipped:skippedClients,all:'Installs supported project-scoped adapters only; skips unverified/global adapters.'});
-  else if(cmd==='doctor')print({version:VERSION,node:process.version,platform:process.platform,root:ws.root,browserWorker:Boolean(worker),origins:values['allow-origin']??[]});
+  else if(cmd==='doctor'){
+    const hints:string[]=[];const major=Number(process.versions.node.split('.')[0]);
+    if(major<24||major>=27)hints.push(`Node ${process.version} is outside the supported range >=24 <27; install Node 24 LTS.`);
+    let browserBinary:{browsersDirectory:string;revision:string;installed:boolean}|null=null;
+    if(worker){
+      try{const pw=createRequire(worker)('playwright') as {chromium:{executablePath():string}};const executable=pw.chromium.executablePath();
+        // `browser install` fetches the headless shell (chromium_headless_shell-<rev>), which executablePath() does not point at; accept either install marker.
+        let dir=path.dirname(executable);while(!/^chromium-\d+$/.test(path.basename(dir))&&path.dirname(dir)!==dir)dir=path.dirname(dir);
+        const revision=path.basename(dir).replace('chromium-','');const browsersDirectory=path.dirname(dir);
+        const installed=[`chromium-${revision}`,`chromium_headless_shell-${revision}`].some(name=>existsSync(path.join(browsersDirectory,name,'INSTALLATION_COMPLETE')));
+        browserBinary={browsersDirectory,revision,installed};
+        if(!installed)hints.push(`Browser worker is installed but Chromium revision ${revision} is missing in ${browsersDirectory}; run: art-director browser install`);}
+      catch(e){hints.push(`Browser worker found but Playwright could not be loaded: ${(e as Error).message.slice(0,200)}`);}
+    }else hints.push('Optional browser worker not installed; audit_ui reports BROWSER_NOT_INSTALLED. Install with: npm install --save-dev @akifsen/art-director-browser');
+    if(!(values['allow-origin']??[]).length)hints.push('No --allow-origin configured; audit_ui with a URL will be refused until the server is started with --allow-origin http://127.0.0.1:PORT');
+    print({version:VERSION,node:process.version,platform:process.platform,root:ws.root,browserWorker:Boolean(worker),browserBinary,origins:values['allow-origin']??[],hints});
+  }
   else if(cmd==='inspect')print(await service.call('inspect_project',{}));
   else if(cmd==='directions')print(await service.call('propose_directions',{brief:JSON.parse(await ws.read(values.brief??'brief.json'))}));
   else if(cmd==='contract')print(await service.call('compile_design_contract',{direction:JSON.parse(await ws.read(values.direction??'direction.json')),expectedRevision:Number(values['expected-revision']??0)}));

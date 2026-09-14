@@ -20,7 +20,7 @@ Uygulama kodunu ve görsel değerlendirmeyi IDE ajanınız yapar. Art Director e
 **Node.js 24 LTS** ve npm gerekir. Projenizin klasöründe çalıştırın:
 
 ```sh
-npx -y @akifsen/art-director-mcp@0.1.1 init --client cursor --apply
+npx -y @akifsen/art-director-mcp@0.2.0 init --client cursor --apply
 ```
 
 [npm paketi](https://www.npmjs.com/package/@akifsen/art-director-mcp), IDE'yi sabitlenmiş sürümü yerel çalıştıracak şekilde yapılandırır. IDE'yi yeniden yükleyip gerektiğinde MCP sunucusunu onaylayın.
@@ -28,7 +28,7 @@ npx -y @akifsen/art-director-mcp@0.1.1 init --client cursor --apply
 Alternatif olarak paketi projeye kurup `--local` ile o kopyaya bağlayın:
 
 ```sh
-npm install --save-dev @akifsen/art-director-mcp@0.1.1
+npm install --save-dev @akifsen/art-director-mcp@0.2.0
 npx art-director init --client cursor --apply --local
 ```
 
@@ -80,7 +80,9 @@ Cursor, Copilot ve Codex için `--with-rules` ile çalışma yönergesi ekleyebi
 
 Altı MCP aracı: `inspect_project`, `propose_directions`, `compile_design_contract`, `get_blueprint`, `audit_ui`, `get_artifact`.
 
-Yön panoları tasarım çalışmalarıdır. Uygun yön sayısı proje bağlamına göre değişir. Sözleşme güncellemelerinde revision kontrolü, başka bir istemcinin kararlarının sessizce ezilmesini önler.
+Yön panoları tasarım çalışmalarıdır. Her pano reçetesinin gezinme desenini (üst bar, yan ray veya masthead içi bağlantılar), tipografi sistemini ve yoğunluğunu izler; yönler yalnızca renkle değil yapı ve tipografiyle ayrışır. Panolar tarayıcıda açılabilmesi için `.art-director/previews/<directionId>.html` dosyalarına (`previewPath`) yazılır. Uygun yön sayısı proje bağlamına göre değişir; dashboard brief'i şu anda iki yön üretir. Sözleşme güncellemelerinde revision kontrolü, başka bir istemcinin kararlarının sessizce ezilmesini önler.
+
+Denetim, ölçülen bulguları sözleşmenin deterministik gereksinimlerine eşler (`requirementResults`: overflow, labels, accessibility, contrast); kompozisyon, tipografi, mobil davranış ve içerik doğruluğu açıkça insan incelemesine bırakılır.
 
 ## IDE sohbetinde kullanım
 
@@ -104,7 +106,7 @@ Bu örnek için önce tarayıcı bileşenini kurun ve uygulamanızın origin'ini
 
 > Mevcut sözleşmemiz için form blueprint'ini al. Bu formun etiketlerini, focus davranışını, loading, error ve success durumlarını iyileştir. Neleri doğruladığını ve nelerin görsel inceleme gerektirdiğini belirt.
 
-Çıktı kısaltılmışsa ajandan `artifactId` değerini `get_artifact` ile okumasını ve `nextCursor` üzerinden devam etmesini isteyin. Sözleşme derlemesine yön nesnesini `previewArtifactId` alanı olmadan verin. İlk kayıt için `expectedRevision: 0`, güncelleme için mevcut revision kullanılır. Blueprint ve audit çağrılarında derlemenin döndürdüğü `contractId` artifact kimliği kullanılır.
+Yaklaşık 40 KB'ı aşan sonuçlar artifact olarak saklanır ve bir `summary` ile döner; ajandan `artifactId` değerini `get_artifact` ile (sayfa başına en fazla 12000 karakter) `nextCursor` üzerinden okumasını isteyin. Sözleşme derlemek için `propose_directions` çağrısındaki `brief` ve `seed` ile birlikte `directionId` verin; ya da yön nesnesini `previewArtifactId`, `previewPath` ve `differences` alanları olmadan gönderin. İlk kayıt için `expectedRevision: 0`, güncelleme için mevcut revision kullanılır. Derleme `.art-director/contract.json`, `tokens.json`, `tokens.css` ve `brief.json` dosyalarını yazar. Blueprint ve audit çağrılarında derlemenin döndürdüğü `contractId` artifact kimliği kullanılır.
 
 ## MCP araçları
 
@@ -124,11 +126,12 @@ Komutları paketin kurulu olduğu proje klasöründe çalıştırın. Her satır
 | Komut | Ne yapar? |
 |---|---|
 | `--help` | CLI kullanımını, asistan seçeneklerini ve komut adlarını gösterir |
+| `--version` | Paket sürümünü yazdırır |
 | `clients` | Adapter'ları, alternatif adları ve atlama gerekçelerini listeler |
 | `init --client cursor --local` | Dosya yazmadan kurulum değişikliklerini önizler |
 | `init --client cursor --apply --local` | Seçilen asistanı mevcut ayarları yedekleyerek projeye ekler |
 | `init --client all --apply --local` | Ön kontrollerden sonra desteklenen tüm proje adapter'larını kurar |
-| `doctor` | Paket/Node sürümünü, platformu, proje kökünü, worker varlığını ve izinli origin'leri gösterir |
+| `doctor` | Paket/Node sürümünü, platformu, proje kökünü, worker ve Chromium varlığını, izinli origin'leri ve çözüm ipuçlarını gösterir |
 | `serve --project <mutlak-kök>` | IDE'nin bağlanacağı stdio MCP sunucusunu başlatır |
 | `inspect` | Projenin UI envanterini inceler |
 | `directions --brief brief.json` | Yapılandırılmış JSON brief'ten tasarım yönleri üretir |
@@ -180,7 +183,7 @@ Brief, yön ve paket dosyası yolları seçilen proje köküne göredir; kök d�
 
 ```sh
 npm install --save-dev @akifsen/art-director-browser@0.1.0
-npx -y @akifsen/art-director-mcp@0.1.1 browser install
+npx -y @akifsen/art-director-mcp@0.2.0 browser install
 ```
 
 Uygulamanızın geliştirme sunucusunu başlatın. IDE yapılandırmasındaki Art Director sunucu argümanlarına uygulamanızın portuyla izinli origin ekleyin:

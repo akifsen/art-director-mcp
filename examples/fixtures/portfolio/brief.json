@@ -1,0 +1,12 @@
+{
+  "product": "Deniz Yılmaz — engineering portfolio",
+  "primaryTask": "Read case studies and contact",
+  "pageType": "portfolio",
+  "audience": "Hiring managers and engineering leads",
+  "content": [
+    {"heading": "Selected work", "body": "Four documented systems projects with measurable outcomes."},
+    {"heading": "Writing", "body": "Notes on distributed systems and developer tooling."},
+    {"heading": "Contact", "body": "Email and calendar link."}
+  ],
+  "constraints": ["Keep existing /work and /notes routes", "Dark mode toggle must stay"]
+}

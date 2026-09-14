@@ -26,6 +26,10 @@ test('stdio browser worker returns real evidence through audit_ui',{skip:!proces
     const contractId=JSON.parse(c.content[0].text).data.contractId;
     const r=await client.callTool({name:'audit_ui',arguments:{contractId,url}});assert.ok(!r.isError,JSON.stringify(r));
     const data=JSON.parse(r.content[0].text);const record=JSON.parse(await fs.readFile(path.join(root,'.art-director/reports',data.artifactId+'.json'),'utf8'));const result=JSON.parse(record.content);
-    assert.equal(result.run.runs.length,2);assert.ok(result.run.runs[0].findings.some(f=>f.ruleId==='label'));
+    assert.equal(result.run.runs.length,2);assert.ok(result.run.runs[0].findings.some(f=>f.ruleId==='label'&&f.contractRequirementId==='labels'));
+    assert.equal(result.requirementResults.find(r=>r.id==='labels').status,'fail');
+    const inline=data.truncated?data.data.summary:data.data;assert.equal(inline.requirementResults.find(r=>r.id==='labels').status,'fail');
+    // The same result is retrievable in large pages through the protocol.
+    const page=await client.callTool({name:'get_artifact',arguments:{artifactId:data.artifactId,limit:12000}});assert.equal(JSON.parse(page.content[0].text).content.length,12000);
   }finally{await client.close();http.closeAllConnections();await new Promise(r=>http.close(r));}
 });

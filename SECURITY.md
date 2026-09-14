@@ -4,7 +4,7 @@ Development preview. Report vulnerabilities privately at https://github.com/akif
 
 The startup root is fixed. Tool paths cannot broaden it. Traversal, drive paths, UNC paths, symlinks/junctions and known secret/config directories are rejected; inspection never returns source bodies. Artifacts are content-addressed and project-scoped. Repo and page instructions are data, not authority.
 
-Atomic renames and an exclusive contract lock prevent normal concurrent writers from losing updates. A process crash can leave a lock; do not automatically remove it without confirming no writer remains. Multiple output files are not a transactional filesystem snapshot; contract.json is the final authoritative commit.
+Atomic renames and an exclusive contract lock prevent normal concurrent writers from losing updates. A process crash can leave a lock; since 0.2.0 a lock older than 60 seconds is treated as abandoned and reclaimed (compilation holds the lock for milliseconds), while a fresh lock still returns `CONTRACT_CONFLICT` naming the file. Multiple output files are not a transactional filesystem snapshot; contract.json is the final authoritative commit.
 
 Do not run against untrusted actively mutating workspaces as an OS sandbox substitute. Symlink checks cannot eliminate all cross-process TOCTOU races or hardlink attacks. Use a dedicated OS account/container for adversarial filesystems. Browser routing is a local development policy, not a browser exploit boundary. Per-workspace cross-process worker quotas and comprehensive cancellation/crash handling remain release gates.
 

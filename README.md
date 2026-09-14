@@ -20,7 +20,7 @@ Your IDE agent handles implementation and visual judgment. Art Director supplies
 Requires **Node.js 24 LTS** and npm. Run these commands inside your project:
 
 ```sh
-npx -y @akifsen/art-director-mcp@0.1.1 init --client cursor --apply
+npx -y @akifsen/art-director-mcp@0.2.0 init --client cursor --apply
 ```
 
 The [npm package](https://www.npmjs.com/package/@akifsen/art-director-mcp) configures your IDE to run a pinned version locally. Reload the IDE and approve the project MCP server when prompted.
@@ -28,7 +28,7 @@ The [npm package](https://www.npmjs.com/package/@akifsen/art-director-mcp) confi
 Alternatively, add the package to your project and bind that copy with `--local`:
 
 ```sh
-npm install --save-dev @akifsen/art-director-mcp@0.1.1
+npm install --save-dev @akifsen/art-director-mcp@0.2.0
 npx art-director init --client cursor --apply --local
 ```
 
@@ -87,7 +87,9 @@ For Cursor, Copilot and Codex, add `--with-rules` to include workflow guidance. 
 | `audit_ui` | Collect and report browser evidence |
 | `get_artifact` | Read generated artifacts in bounded pages |
 
-Direction boards are design studies. The number of compatible directions depends on the project context. Contract updates use revision checks to prevent one client from silently overwriting another client's decisions.
+Direction boards are design studies. Each board follows its recipe's navigation pattern (top bar, side rail or inline masthead links), type system and density, so directions differ in structure and typography, not only in color. Boards are written to `.art-director/previews/<directionId>.html` (`previewPath`) so you can open them in a browser. The number of compatible directions depends on the project context; a dashboard brief currently yields two. Contract updates use revision checks to prevent one client from silently overwriting another client's decisions.
+
+Audits map measured findings onto the contract's deterministic requirements (`requirementResults`: overflow, labels, accessibility, contrast) and leave composition, typography, mobile behavior and content truth explicitly marked for human review.
 
 ## Use it in IDE chat
 
@@ -111,7 +113,7 @@ For this example, install the browser worker and add the application's exact ori
 
 > Retrieve the form blueprint for our current contract. Use it to improve labels, focus behavior, loading, error and success states in this form. Explain which parts you verified and which need visual review.
 
-If a result is truncated, ask the agent to retrieve its `artifactId` with `get_artifact`, following `nextCursor`. Pass the generated direction object to contract compilation without its `previewArtifactId`. Use `expectedRevision: 0` for the first saved contract and the current revision for updates. Blueprint and audit calls use the `contractId` artifact identifier returned by compilation.
+Results larger than about 40 KB are stored as artifacts and returned with a `summary`; ask the agent to retrieve the `artifactId` with `get_artifact` (up to 12000 characters per page), following `nextCursor`. To compile a contract, pass `directionId` together with the same `brief` and `seed` used for `propose_directions`, or pass the generated direction object without its `previewArtifactId`, `previewPath` and `differences` fields. Use `expectedRevision: 0` for the first saved contract and the current revision for updates. Compilation writes `.art-director/contract.json`, `tokens.json`, `tokens.css` and `brief.json`. Blueprint and audit calls use the `contractId` artifact identifier returned by compilation.
 
 ## Command reference
 
@@ -120,11 +122,12 @@ Run terminal commands from the project where the package is installed. Prefix ea
 | Command | What it does |
 |---|---|
 | `--help` | Show CLI usage, assistant options and command names |
+| `--version` | Print the package version |
 | `clients` | List project adapters, aliases and skipped-client reasons |
 | `init --client cursor --local` | Preview project configuration changes without writing |
 | `init --client cursor --apply --local` | Install the selected adapter with backups |
 | `init --client all --apply --local` | Install every supported project adapter after preflight checks |
-| `doctor` | Print package/Node versions, platform, project root, worker availability and allowed origins |
+| `doctor` | Print package/Node versions, platform, project root, worker and Chromium availability, allowed origins and actionable hints |
 | `serve --project <absolute-root>` | Start the stdio MCP server used by the IDE |
 | `inspect` | Inspect the current project's UI inventory |
 | `directions --brief brief.json` | Generate directions from a structured JSON brief |
@@ -176,7 +179,7 @@ Install the matching optional worker in the same project:
 
 ```sh
 npm install --save-dev @akifsen/art-director-browser@0.1.0
-npx -y @akifsen/art-director-mcp@0.1.1 browser install
+npx -y @akifsen/art-director-mcp@0.2.0 browser install
 ```
 
 Start your application's development server, then add an allowed origin to the Art Director server arguments in your IDE configuration:
@@ -185,7 +188,7 @@ Start your application's development server, then add an allowed origin to the A
 --allow-origin http://127.0.0.1:5187
 ```
 
-Use the port belonging to your application. The worker visits explicitly allowed numeric loopback origins in an isolated browser context. Art Director does not start your application server or use your personal browser profile.
+Use the port belonging to your application. The worker visits explicitly allowed numeric loopback origins in an isolated browser context. A URL whose origin is not allowed is refused before any browser starts, with the exact `--allow-origin` value to add. Art Director does not start your application server or use your personal browser profile.
 
 Audits capture desktop/mobile evidence and run axe accessibility and overflow checks. Automated findings support review; they are not a WCAG certification or an aesthetic score. The IDE agent performs visual evaluation.
 
@@ -208,7 +211,7 @@ npm run build
 npm test
 ```
 
-The repository includes a React/Vite example:
+The repository includes static review fixtures in `examples/fixtures` (portfolio and dashboard briefs, a page with two deliberate defects and its corrected version) and a React/Vite example:
 
 ```sh
 npm ci --ignore-scripts --prefix examples/expressive-product

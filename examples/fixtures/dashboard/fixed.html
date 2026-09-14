@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Fleet operations console — fixed fixture</title>
+<style>
+  body{margin:0;font:15px/1.5 system-ui,sans-serif;color:#182f2a;background:#f3f6f5}
+  header{display:flex;flex-wrap:wrap;gap:1rem;align-items:center;padding:.75rem 1rem;border-bottom:1px solid #182f2a}
+  main{padding:1rem}
+  /* Fix 1: the table keeps its minimum width but scrolls inside a named region instead of the page. */
+  .region{overflow-x:auto}
+  table{border-collapse:collapse;width:100%;min-width:36rem}
+  th,td{text-align:left;padding:.4rem .6rem;border-bottom:1px solid #182f2a}
+  button,input{font:inherit}
+  button{border:1px solid currentColor;background:none;padding:.3em .7em}
+  :focus-visible{outline:2px solid #17664e;outline-offset:2px}
+</style>
+</head>
+<body>
+<header>
+  <strong>Fleet operations console</strong>
+  <!-- Fix 2: visible label associated with the control. -->
+  <label for="q">Search vehicles</label>
+  <input id="q" type="search">
+  <button type="button">Acknowledge selected</button>
+</header>
+<main>
+  <h1>Active alerts</h1>
+  <div class="region" role="region" aria-label="Alerts table" tabindex="0">
+    <table>
+      <caption>Alerts requiring acknowledgement</caption>
+      <thead><tr><th scope="col">Severity</th><th scope="col">Vehicle</th><th scope="col">Age</th><th scope="col">Action</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Critical</th><td>TR-1042</td><td>4 min</td><td><button type="button">Acknowledge TR-1042</button></td></tr>
+        <tr><th scope="row">Warning</th><td>TR-0877</td><td>19 min</td><td><button type="button">Acknowledge TR-0877</button></td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+</body>
+</html>

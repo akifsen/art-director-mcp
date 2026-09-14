@@ -1,0 +1,13 @@
+{
+  "product": "Fleet operations console",
+  "primaryTask": "Find failing vehicles and acknowledge alerts",
+  "pageType": "dashboard",
+  "audience": "Operations staff on shift",
+  "content": [
+    {"heading": "Active alerts", "body": "Table of alerts with severity, vehicle, age and acknowledge action."},
+    {"heading": "Fleet status", "body": "Counts by state with filters."},
+    {"heading": "Vehicle detail", "body": "Telemetry and maintenance history."}
+  ],
+  "constraints": ["Keep the existing data grid component", "Support keyboard-only operation"],
+  "preferences": {"density": "dense"}
+}

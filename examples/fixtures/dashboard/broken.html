@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Fleet operations console — broken fixture</title>
+<style>
+  body{margin:0;font:15px/1.5 system-ui,sans-serif;color:#182f2a;background:#f3f6f5}
+  header{display:flex;gap:1rem;align-items:center;padding:.75rem 1rem;border-bottom:1px solid #182f2a}
+  main{padding:1rem}
+  /* Deliberate defect 1: fixed-width table forces page-level horizontal overflow on both viewports. */
+  table{border-collapse:collapse;width:1800px}
+  th,td{text-align:left;padding:.4rem .6rem;border-bottom:1px solid #182f2a}
+  button{font:inherit;border:1px solid currentColor;background:none;padding:.3em .7em}
+  :focus-visible{outline:2px solid #17664e;outline-offset:2px}
+</style>
+</head>
+<body>
+<header>
+  <strong>Fleet operations console</strong>
+  <!-- Deliberate defect 2: the visible text is not associated with the control, so the input has no accessible name. -->
+  <span>Search vehicles</span>
+  <input type="search">
+  <button type="button">Acknowledge selected</button>
+</header>
+<main>
+  <h1>Active alerts</h1>
+  <table>
+    <caption>Alerts requiring acknowledgement</caption>
+    <thead><tr><th scope="col">Severity</th><th scope="col">Vehicle</th><th scope="col">Age</th><th scope="col">Action</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Critical</th><td>TR-1042</td><td>4 min</td><td><button type="button">Acknowledge TR-1042</button></td></tr>
+      <tr><th scope="row">Warning</th><td>TR-0877</td><td>19 min</td><td><button type="button">Acknowledge TR-0877</button></td></tr>
+    </tbody>
+  </table>
+</main>
+</body>
+</html>

@@ -91,4 +91,33 @@ Version: 0.2.0 (minor — additive tool inputs/outputs, no removals; 0.1.x direc
 
 ### Release log
 
-_Filled in at the end of the process; see the final section._
+| Step | State | Evidence |
+|---|---|---|
+| Review, fixes, tests | Done | This document; 44/44 tests with browser on Windows/Node 24.21.0 |
+| Commit | Done | `40eaaf0fe93e256bebcf3b619f54cc31ea9297ea` on `main`, pushed |
+| CI | Passed | Run [34816046987](https://github.com/akifsen/art-director-mcp/actions/runs/34816046987): windows-latest, ubuntu-latest, macos-latest all `success` (typecheck, build, tests incl. browser, pack smoke, example build) |
+| Tag | Done | `v0.2.0` → `40eaaf0`, pushed |
+| npm publish | **Blocked — maintainer action required** | `npm publish --ignore-scripts --access public` from `packages/mcp` produced the exact tarball (`shasum 3674fa37be3c711d2c4e0d15a0dd04b42f9e51d9`, 4 files, 87.8 kB unpacked) and stopped with `EOTP`: the account uses 2FA `auth-and-writes`, so a one-time password / browser approval is required. No token was created and no security setting was changed. |
+| GitHub Release | Not created | No `gh` CLI or API token available in this session; tag exists. Release notes = CHANGELOG 0.2.0 section. |
+| Post-publish verification | Not performed | Depends on the publish step |
+
+To complete the release (maintainer):
+
+```powershell
+cd packages\mcp
+npm publish --ignore-scripts --access public --otp=<code>   # or approve the browser prompt npm opens
+cd ..\..
+npm view @akifsen/art-director-mcp version dist-tags          # expect 0.2.0 / latest
+```
+
+Then verify from the registry in a clean directory:
+
+```powershell
+mkdir "$env:TEMP\ad-verify"; cd "$env:TEMP\ad-verify"; '{"private":true}' | Set-Content package.json
+npm install --save-dev --ignore-scripts @akifsen/art-director-mcp@0.2.0
+npx art-director --version                                    # 0.2.0
+npx art-director doctor
+npx art-director init --client cursor                         # dry-run shows the npx launcher pinned to 0.2.0
+```
+
+Rollback/forward-fix policy: never unpublish or overwrite 0.2.0; publish 0.2.1 with a fix and move `latest`, or `npm deprecate` the affected version with guidance.

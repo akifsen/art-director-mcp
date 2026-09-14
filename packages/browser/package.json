@@ -1,6 +1,6 @@
 {
   "name": "@akifsen/art-director-browser",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "type": "module",
   "license": "MIT",
   "files": [
@@ -8,7 +8,7 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=24 <27"
+    "node": ">=22 <27"
   },
   "exports": {
     ".": "./dist/worker.js"

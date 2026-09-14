@@ -1,0 +1,25 @@
+{
+  "product": "Northline Studio",
+  "purpose": "An independent studio that designs, engineers and maintains web products for mid-size organizations.",
+  "primaryTask": "Start a project conversation",
+  "pageType": "company",
+  "audience": "Operations and product leads at mid-size organizations",
+  "brand": {
+    "name": "Northline",
+    "colors": {"background": "#101418", "text": "#e8eef2", "accent": "#f2b531"},
+    "fonts": {"heading": "Fraunces", "body": "Inter"}
+  },
+  "character": {"prefer": ["technical", "confident"], "avoid": ["numbered-steps", "hero-image"]},
+  "assets": {"screenshots": false, "logos": true},
+  "content": [
+    {"heading": "Product design", "body": "Research, interaction and interface design for web applications.", "role": "offering", "group": "Services"},
+    {"heading": "Engineering", "body": "TypeScript front ends, design systems and integration work.", "role": "offering", "group": "Services"},
+    {"heading": "Care & maintenance", "body": "Monthly maintenance retainers with accessibility and performance reviews.", "role": "offering", "group": "Services"},
+    {"heading": "Selected work", "body": "Three shipped products with the client named and the problem stated.", "role": "work", "priority": "primary", "evidence": "real"},
+    {"heading": "Results", "body": "", "role": "proof", "evidence": "none"},
+    {"heading": "About the studio", "body": "Six people in Izmir and Berlin, working since 2016.", "role": "organization"},
+    {"heading": "Contact", "body": "hello@northline.example", "role": "contact"}
+  ],
+  "preserve": ["Existing /work/:slug routes", "Language switcher (tr/en)"],
+  "constraints": ["No cookie banner redesign"]
+}

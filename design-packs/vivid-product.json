@@ -1,11 +1,13 @@
 {
   "id": "vivid-product",
   "name": "Vivid Product",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "purpose": "Show a real product and make the primary task clear.",
   "suitable": [
     "product",
-    "portfolio"
+    "portfolio",
+    "landing",
+    "company"
   ],
   "unsuitable": "Do not substitute promotional claims for operational data.",
   "colors": {
@@ -29,7 +31,15 @@
         "body": "sans",
         "headingWeight": 800,
         "numerals": "proportional"
-      }
+      },
+      "features": [
+        "topbar",
+        "split-hero",
+        "hero-image",
+        "feature-band",
+        "numbered-steps"
+      ],
+      "wrongWhen": "No real product visual exists; the stage would stay a placeholder in production."
     },
     {
       "id": "guided-path",
@@ -46,7 +56,12 @@
         "body": "sans",
         "headingWeight": 600,
         "numerals": "tabular"
-      }
+      },
+      "features": [
+        "sidebar",
+        "numbered-steps"
+      ],
+      "wrongWhen": "Content is not a sequence; numbering unrelated offerings implies an order that does not exist."
     }
   ],
   "states": {

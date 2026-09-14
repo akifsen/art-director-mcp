@@ -11,7 +11,11 @@ Status: accepted.
 ## Design directions
 
 - Directions are recipes selected from validated design packs. Packs are data, never executable plugins.
-- A brief may receive fewer than three directions when its context (for example, a data-dense dashboard) rules out recipes; the result explains the restriction instead of repurposing an unsuitable layout.
+- A recipe is a composition frame (grid, rhythm, navigation, mobile behavior, structural features). Palette and type are resolved separately per direction from the brief with the precedence explicit preferences → brand facts → character words → pack defaults, and every decision records its source. The pack is a fallback, not the identity.
+- Content is an architecture, not a list: brief items carry roles, priorities and groups; sections are derived from them and shared by boards, contracts and blueprints. Missing material is an explicit gap; nothing is fabricated.
+- Candidates are scored for fit against the brief first; structural diversity is applied only among recipes close to the best fit. Fill-ins and exclusions are explained in the response.
+- A brief may receive fewer than three directions when its page type or avoid list rules out recipes; the result explains the restriction instead of repurposing an unsuitable layout.
+- The MCP never calls a model. Free creative reasoning happens in the host agent; the server accepts its structured result (`preferences`, `brand`, roles, `hostReview`), validates it, stores it and carries it through every output.
 
 ## Assistant installation
 

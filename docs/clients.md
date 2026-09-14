@@ -32,6 +32,8 @@ Managed workflow rules (`--with-rules`) are available for Cursor (`.cursor/rules
 
 Configuration generation, merging, backups and idempotence are covered by the automated test suite on Windows, Linux and macOS. How each assistant discovers and approves the server is defined by that assistant; consult its documentation if the server does not appear after reloading.
 
+If the server does not appear, run `art-director doctor --client <option>`. It reads the entry written for that assistant, launches the same command and completes the MCP handshake over stdio (`initialize`, `tools/list`), reporting the startup time, the tool list and diagnostics: a cold `npx` download that exceeds the assistant's startup timeout, an unsupported Node version inherited by the assistant, or a command that cannot be started from a GUI application's PATH. A successful probe means the process and protocol work; whether the assistant's UI lists the tools is decided by the assistant.
+
 ## Assistants configured outside the project
 
 These assistants store MCP servers in user-level settings or through their own UI rather than a project file, so `init` reports them as `skipped` and leaves your files unchanged. Register the server there using the launch command shown by `art-director init --client cursor` (dry run) as a reference.

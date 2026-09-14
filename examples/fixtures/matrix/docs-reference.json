@@ -1,0 +1,16 @@
+{
+  "product": "Relay SDK documentation",
+  "purpose": "Reference and guides for the Relay event SDK.",
+  "primaryTask": "Find the method signature you need",
+  "pageType": "docs",
+  "audience": "Application developers integrating Relay",
+  "brand": {"fonts": {"heading": "IBM Plex Sans", "body": "IBM Plex Sans"}},
+  "character": {"prefer": ["technical", "minimal"], "avoid": ["hero-image", "feature-band"]},
+  "content": [
+    {"heading": "Getting started", "body": "Install, configure the client and send the first event.", "role": "process", "priority": "primary"},
+    {"heading": "Client API", "body": "Constructor options, send(), flush(), close().", "role": "technical"},
+    {"heading": "Server API", "body": "Webhook verification and replay.", "role": "technical"},
+    {"heading": "Error codes", "body": "Every error code with cause and remedy.", "role": "data"},
+    {"heading": "Support", "body": "Issue tracker and status page.", "role": "support"}
+  ]
+}

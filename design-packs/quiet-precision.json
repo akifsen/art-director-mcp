@@ -1,12 +1,14 @@
 {
   "id": "quiet-precision",
   "name": "Quiet Precision",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "purpose": "Make operational state and information retrieval legible.",
   "suitable": [
     "dashboard",
     "product",
-    "portfolio"
+    "portfolio",
+    "docs",
+    "company"
   ],
   "unsuitable": "Avoid using a dense table when visitors need a narrative.",
   "colors": {
@@ -30,7 +32,13 @@
         "body": "sans",
         "headingWeight": 600,
         "numerals": "tabular"
-      }
+      },
+      "features": [
+        "sidebar",
+        "toolbar",
+        "tables"
+      ],
+      "wrongWhen": "The page must persuade or introduce; a workbench assumes returning users who know the domain."
     },
     {
       "id": "ledger",
@@ -47,7 +55,13 @@
         "body": "sans",
         "headingWeight": 500,
         "numerals": "tabular"
-      }
+      },
+      "features": [
+        "topbar",
+        "summary-strip",
+        "records"
+      ],
+      "wrongWhen": "Content is narrative or promotional; records need real, repeatable fields."
     }
   ],
   "states": {

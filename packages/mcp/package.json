@@ -1,6 +1,6 @@
 {
   "name": "@akifsen/art-director-mcp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "type": "module",
   "description": "Art direction, design contracts and evidence-based UI audits for coding agents",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=24 <27"
+    "node": ">=22 <27"
   },
   "dependencies": {
     "@modelcontextprotocol/server": "2.0.0",

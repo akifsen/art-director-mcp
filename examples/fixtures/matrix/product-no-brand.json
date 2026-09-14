@@ -1,0 +1,15 @@
+{
+  "product": "Ledgerline",
+  "purpose": "Invoicing for freelance translators, with per-language rate cards.",
+  "primaryTask": "Start a free trial",
+  "pageType": "product",
+  "audience": "Freelance translators who invoice in several currencies",
+  "assets": {"screenshots": false},
+  "content": [
+    {"heading": "Rate cards per language pair", "body": "Store one rate per source/target pair and currency; invoices pick the right one.", "role": "offering", "priority": "primary", "evidence": "real"},
+    {"heading": "Invoice in the client's currency", "body": "Conversion date and rate are printed on the invoice.", "role": "offering"},
+    {"heading": "How it works", "body": "Create a client, add a job, send the invoice, track payment.", "role": "process"},
+    {"heading": "Customers", "body": "", "role": "proof", "evidence": "none"},
+    {"heading": "Pricing", "body": "One plan, monthly, cancel anytime.", "role": "support"}
+  ]
+}

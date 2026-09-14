@@ -1,0 +1,18 @@
+{
+  "product": "Harbor",
+  "purpose": "A shared inbox for small harbour offices.",
+  "primaryTask": "Request early access",
+  "pageType": "landing",
+  "audience": "Harbour masters and office staff",
+  "character": {"prefer": ["bold", "warm"], "avoid": ["carousel"]},
+  "assets": {"screenshots": true, "photography": false},
+  "content": [
+    {"heading": "One inbox for berth requests, invoices and notices", "body": "Every message is a case with an owner and a due date.", "role": "hero"},
+    {"heading": "Berth requests", "body": "Approve or decline from the message itself.", "role": "offering", "group": "What it handles"},
+    {"heading": "Invoices", "body": "Attach the tariff line and send.", "role": "offering", "group": "What it handles"},
+    {"heading": "Notices to mariners", "body": "Publish once, notify every affected vessel.", "role": "offering", "group": "What it handles"},
+    {"heading": "Trusted by", "body": "", "role": "proof", "evidence": "none"},
+    {"heading": "Request access", "body": "Leave your office name and we contact you.", "role": "contact"}
+  ],
+  "preferences": {"navigation": "top", "source": "user"}
+}
